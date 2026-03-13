@@ -1,19 +1,192 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<html xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<!DOCTYPE html>
+<html lang="pt-PT" class="scroll-smooth">
 <head>
-<meta charset='utf-8'/>
-<meta content='width=device-width, initial-scale=1.0' name='viewport'/>
-<title><data:blog.title/></title>
-<link href='https://cdn.tailwindcss.com' rel='stylesheet'/>
-<script src='https://cdn.tailwindcss.com'></script>
-<b:skin><![CDATA[*{margin:0;padding:0;box-sizing:border-box}.container{max-width:1280px;margin:0 auto;padding:0 16px}body{background:#f9fafb;color:#1f2937;font-family:system-ui,-apple-system,sans-serif;line-height:1.5}nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(15,23,42,.95);backdrop-filter:blur(4px);box-shadow:0 1px 3px rgba(0,0,0,.1)}.nav-content{max-width:1280px;margin:0 auto;padding:0 16px;height:64px;display:flex;justify-content:space-between;align-items:center}.nav-title{color:#fff;font-weight:600;font-size:18px;letter-spacing:.05em}.nav-links{display:flex;gap:24px;font-size:14px;color:#d1d5db}.nav-links a{color:#d1d5db;text-decoration:none;transition:color .2s}.nav-links a:hover{color:#fff}header{padding-top:96px;padding-bottom:64px;background:#0f172a;color:#fff;text-align:center}header h1{font-size:48px;font-weight:700;margin-bottom:16px;letter-spacing:-.02em}header p{font-size:18px;color:#d1d5db;margin-bottom:32px}main{max-width:1280px;margin:0 auto;padding:48px 16px}section{margin-bottom:96px}h2{font-size:30px;font-weight:700;margin-bottom:24px;text-align:center;color:#0f172a}.card{background:#fff;padding:24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.1);border:1px solid #e5e7eb;transition:all .2s}.card:hover{box-shadow:0 10px 15px rgba(0,0,0,.1)}.btn{display:inline-block;padding:12px 24px;border-radius:8px;font-weight:500;text-decoration:none;transition:all .2s;cursor:pointer}.btn-primary{background:#881337;color:#fff}.btn-primary:hover{background:#9f1239;box-shadow:0 10px 15px rgba(0,0,0,.1)}.btn-secondary{background:transparent;border:2px solid #9ca3af;color:#d1d5db;border-radius:8px}.btn-secondary:hover{border-color:#fff;color:#fff}footer{background:#0f172a;color:#9ca3af;padding:32px 16px;border-top:1px solid #1f2937}]]></b:skin>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudo: Eternidade, Tempo e a Cruz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        soberBlue: '#0f172a',
+                        soberWine: '#881337',
+                        soberWineHover: '#9f1239'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        section {
+            scroll-margin-top: 5rem;
+        }
+    </style>
 </head>
-<body>
-<nav><div class='nav-content'><div class='nav-title'>Eternidade &amp; Tempo</div><div class='nav-links'><a href='#visao-geral'>Visão Geral</a><a href='#chronos-kairos'>Chronos x Kairos</a><a href='#joao-apocalipse'>João</a><a href='#abraao'>Abraão</a><a href='#a-cruz'>A Cruz</a></div></div></nav>
-<header><div class='container'><h1>Eternidade, Tempo e a Cruz</h1><p>Um estudo bíblico completo sobre a interseção entre o tempo e a eternidade.</p><a href='#visao-geral' class='btn btn-primary'>Ler Estudo</a></div></header>
-<main>
-<section id='visao-geral' class='container'><h2>Visão Geral</h2><div class='card'><h3>Apocalipse 1.8 - Alfa e Ômega</h3><p>Neste estudo, compreendemos a interseção entre o tempo e a eternidade. Alfa e Ômega falam do tempo com início e fim. Que é, que era e que há de vir falam da eternidade sem limites.</p></div></section>
-</main>
-<footer><div class='container'><p><strong>Bruno Novaes</strong></p><p>Design &amp; Tecnologia Educacional</p></div></footer>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased leading-relaxed">
+
+    <nav class="fixed w-full z-50 top-0 bg-soberBlue/95 backdrop-blur-sm shadow-md">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="#" class="text-white font-semibold text-lg tracking-wide">Eternidade &amp; Tempo</a>
+                <div class="hidden md:flex space-x-6 text-sm text-gray-300">
+                    <a href="#visao-geral" class="hover:text-white transition-colors">Visão Geral</a>
+                    <a href="#chronos-kairos" class="hover:text-white transition-colors">Chronos x Kairos</a>
+                    <a href="#joao-apocalipse" class="hover:text-white transition-colors">João e o Apocalipse</a>
+                    <a href="#abraao" class="hover:text-white transition-colors">Abraão</a>
+                    <a href="#a-cruz" class="hover:text-white transition-colors">A Cruz</a>
+                    <a href="#downloads" class="hover:text-white transition-colors">Downloads</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-24 pb-16 md:pt-32 md:pb-24 bg-soberBlue text-white text-center px-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Eternidade, Tempo e a Cruz</h1>
+            <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Um estudo bíblico baseado em Apocalipse 1, Hebreus 11, Salmos 22 e 18, e Colossenses 2.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#visao-geral" class="px-6 py-3 bg-soberWine hover:bg-soberWineHover text-white rounded-lg font-medium transition-all shadow-lg hover:shadow-xl">
+                    Ler Estudo
+                </a>
+                <a href="#chronos-kairos" class="px-6 py-3 bg-transparent border-2 border-gray-400 hover:border-white hover:text-white text-gray-300 rounded-lg font-medium transition-all">
+                    Ver Exemplos
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-24">
+
+        <section id="visao-geral" class="grid md:grid-cols-5 gap-8 items-center">
+            <div class="md:col-span-3 space-y-4">
+                <h2 class="text-3xl font-bold text-soberBlue border-b-2 border-soberWine inline-block pb-2">Visão Geral</h2>
+                <p class="text-gray-600">Neste estudo, partimos de Apocalipse 1.8 para compreender a interseção entre o tempo e a eternidade. Existem aqui duas ideias fundamentais: "Alfa e Ômega, princípio e fim" falam do tempo, da história com um começo e um fim. Por outro lado, "que é, que era e que há de vir" falam da eternidade, da existência de Deus sem início nem término, num eterno "\u00e9".</p>
+                <p class="text-gray-600">Quando se fala de eternidade, não se fala de algo com um primeiro e último instante, mas de algo sem limites. É exatamente em Cristo que o tempo e a eternidade se cruzam de forma perfeita.</p>
+            </div>
+            <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm border-l-4 border-soberWine hover:shadow-md transition-shadow">
+                <h3 class="font-semibold text-lg text-soberBlue mb-2">Apocalipse 1.8</h3>
+                <p class="italic text-gray-700">"Eu sou o Alfa e o Ômega, o princípio e o fim, diz o Senhor, que é, que era e que há de vir, o Todo-Poderoso."</p>
+            </div>
+        </section>
+
+        <section id="chronos-kairos">
+            <h2 class="text-3xl font-bold text-soberBlue mb-4 text-center">Eternidade x Tempo (Chronos x Kairos)</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">O tempo (Chronos) é passado, presente e futuro. A eternidade (Kairos) é a dimensão maior que envolve o tempo. Para nós, mil anos são uma longa história; na visão de Deus, equivalem a um dia. Deus senta-se no "\u00c9" da eternidade e, sem sair do trono, vê o início e o fim da história humana simultaneamente.</p>
+            
+            <div class="grid sm:grid-cols-2 gap-6">
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all border border-gray-100">
+                    <h3 class="text-xl font-bold text-soberWine mb-3 flex items-center gap-2">
+                        <span class="bg-soberWine text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
+                        Exemplo do Filme
+                    </h3>
+                    <p class="text-gray-600">Imagine um filme de três horas. Nós assistimos minuto a minuto: essa é a experiência do tempo, onde só vemos a cena presente. O diretor, porém, está na sala de edição com o filme inteiro aberto no ecrã: ele vê o começo, o meio e o fim ao mesmo tempo. Nós somos o espectador preso ao relógio; Deus é como o diretor que tem toda a história diante de Si num único "agora".</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all border border-gray-100">
+                    <h3 class="text-xl font-bold text-soberWine mb-3 flex items-center gap-2">
+                        <span class="bg-soberWine text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span>
+                        Exemplo da Rua e do Prédio
+                    </h3>
+                    <p class="text-gray-600">Pense em alguém a caminhar numa rua longa. Só consegue ver alguns metros à frente (o tempo). Agora, imagine que essa pessoa entra num prédio alto, sobe até ao terraço e olha para baixo. Lá de cima, ela vê, ao mesmo tempo, o início, o meio e o fim da rua. Essa visão de cima ilustra perfeitamente a perspetiva da eternidade.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="joao-apocalipse" class="bg-soberBlue text-white rounded-2xl p-8 md:p-12 shadow-xl">
+            <h2 class="text-3xl font-bold mb-8 text-center border-b border-gray-700 pb-4">João e o Apocalipse</h2>
+            <div class="space-y-8">
+                <div class="flex flex-col md:flex-row gap-4 items-start">
+                    <div class="bg-soberWine p-3 rounded-lg font-bold min-w-[150px] text-center">Patmos</div>
+                    <p class="text-gray-300 md:pt-2">João está na ilha de Patmos, limitado pelo tempo, mas é levado em espírito para a realidade celestial. Vê Jesus glorificado (olhos como chama de fogo, cabelos brancos como a lã) de tal forma que cai aos Seus pés como morto. Jesus apresenta-Se como o mesmo que andou com ele na terra, mostrando que a Sua essência não muda, apenas a manifestação da Sua glória.</p>
+                </div>
+                <div class="flex flex-col md:flex-row gap-4 items-start">
+                    <div class="bg-soberWine p-3 rounded-lg font-bold min-w-[150px] text-center">O Livro Selado</div>
+                    <p class="text-gray-300 md:pt-2">João vê o Pai no trono com um livro selado com sete selos. Ninguém é achado digno de o abrir, e João chora. No tempo, Jesus estava na ascensão. Na eternidade, João vê exatamente a "janela" antes da chegada de Cristo. De repente, surge o Cordeiro como tendo sido morto, que é declarado digno de abrir o livro e desatar os selos.</p>
+                </div>
+                <div class="flex flex-col md:flex-row gap-4 items-start">
+                    <div class="bg-soberWine p-3 rounded-lg font-bold min-w-[150px] text-center">Além do Tempo</div>
+                    <p class="text-gray-300 md:pt-2">O Apocalipse não mostra apenas o futuro. João é levado também a eventos do passado eterno. Tudo isto acontece num "instante eterno" que, de volta ao tempo, representa poucos segundos. Por isso, João recebe revelações "das coisas que ainda acontecerão", mas narra-as como se já estivessem a acontecer a partir do "\u00c9" de Deus.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="abraao">
+            <h2 class="text-3xl font-bold text-soberBlue mb-8 text-center">Abraão e a Cidade</h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border-t-4 border-soberWine">
+                    <h3 class="text-lg font-bold text-soberBlue mb-2">A Promessa</h3>
+                    <p class="text-gray-600">Hebreus 11 mostra que Abraão sai sem saber para onde vai. Aos olhos naturais, o terreno estava vazio, sem construção. Ele habita em tendas no tempo, mas caminhando em direção à promessa.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border-t-4 border-soberWine">
+                    <h3 class="text-lg font-bold text-soberBlue mb-2">A Cidade Celestial</h3>
+                    <p class="text-gray-600">Abraão espera uma cidade com fundamentos construída por Deus. Pela fé, tem acesso ao "projeto" 3D da Nova Jerusalém, que no tempo parece não estar pronta, mas na eternidade já o está.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border-t-4 border-soberWine">
+                    <h3 class="text-lg font-bold text-soberBlue mb-2">O Sacrifício e a Fé</h3>
+                    <p class="text-gray-600">Quando recebe a ordem para sacrificar Isaque, a sua fé é tão forte que ele já considerava Deus poderoso para o ressuscitar. Ele sobe o monte com a certeza absoluta de que desceria com o filho vivo.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="a-cruz" class="bg-gray-100 p-8 md:p-12 rounded-2xl">
+            <h2 class="text-3xl font-bold text-soberBlue mb-8 text-center">A Cruz na Eternidade</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">Pense na cruz como uma cena filmada por três câmaras diferentes. A primeira (Evangelhos) mostra o que todos veem de fora. Mas as outras revelam a perspetiva eterna:</p>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow hover:-translate-y-1 transition-transform">
+                    <div class="text-soberWine font-bold text-xl mb-2">Salmo 22</div>
+                    <p class="text-gray-600 text-sm">Focada no coração de Jesus. Mostra o que Ele sente por dentro e o que acontece espiritualmente: o clamor de abandono, a zombaria, e os demónios figurados como touros e cães a cercá-Lo.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow hover:-translate-y-1 transition-transform">
+                    <div class="text-soberWine font-bold text-xl mb-2">Salmo 18</div>
+                    <p class="text-gray-600 text-sm">A câmara do mundo espiritual. Mostra o Pai descendo com poder: a terra a tremer, trevas, trovões e raios. Deus desce para livrar o Filho e batalhar ativamente contra os inimigos.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow hover:-translate-y-1 transition-transform">
+                    <div class="text-soberWine font-bold text-xl mb-2">Colossenses 2</div>
+                    <p class="text-gray-600 text-sm">Mostra o efeito jurídico da cruz. Jesus perdoa as ofensas, risca e crava na cruz a cédula de dívida. Despoja principados e potestades, e proclama uma vitória eterna e oficial de liberdade.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="aplicacao">
+            <div class="max-w-3xl mx-auto bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-gray-200">
+                <h2 class="text-2xl font-bold text-soberBlue mb-6">Aplicação para a Vida</h2>
+                <ul class="space-y-4 text-gray-700">
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-soberWine mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span><strong>A Teologia do "Hoje":</strong> Deus deu-nos um dia chamado "hoje". O que temos a fazer — orar, buscar, servir e obedecer — deve ser feito agora, pois o homem não aguenta administrar o seu próprio tempo adequadamente.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-soberWine mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span><strong>Viver no Nível da Eternidade:</strong> Pela fé, podemos falar de coisas que ainda não existem no tempo como se já existissem, porque já estão prontas na eternidade (ex: "a minha família está formada"). Não é fantasia, é visão de fé.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-soberWine mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span><strong>Arrependimento e o Perdão Eterno:</strong> No tempo, precisamos de chorar, arrepender-nos e pedir perdão. Mas na eternidade, Deus não é surpreendido; Ele já nos vê perdoados e sentados à mesa nas Bodas do Cordeiro.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-soberWine mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span><strong>A Fé como Lanterna:</strong> Enquanto estamos no túnel do tempo, a fé é indispensável para vermos o caminho. Um dia, quando saírmos para a luz da eternidade, não precisaremos mais de crer — passaremos a ver com os nossos próprios olhos (como o Apóstolo Paulo que "guardou a fé").</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-soberBlue text-gray-400 py-8 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left">
+                <p class="text-white font-semibold">Bruno Novaes</p>
+                <p class="text-sm">Design &amp; Tecnologia Educacional</p>
+            </div>
+            <div class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-xs text-gray-500 border border-gray-700">
+                Logo
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
