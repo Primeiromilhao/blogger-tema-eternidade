@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudos Bíblicos — Índice</title>
+    <meta name="description" content="Página de índice dos estudos bíblicos em HTML. Uma coleção de estudos aprofundados baseados na Palavra de Deus, inspirados na Nova Jerusalém.">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --gold: #B8860B;
+            --gold-light: #D4A017;
+            --gold-shine: #FFE66D;
+            --pearl: #FDF8F0;
+            --sapphire: #1B4F8A;
+            --emerald: #1A6B3C;
+            --jasper: #8B1A1A;
+            --crystal: rgba(255,255,255,0.7);
+            --sky: #EAF4FF;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--pearl);
+            color: #2A2A3A;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ── SKY BACKGROUND ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,230,109,0.25) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 20%, rgba(200,220,255,0.3) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 20% 80%, rgba(220,240,220,0.2) 0%, transparent 60%),
+                linear-gradient(180deg, #EAF4FF 0%, #FDF8F0 50%, #FFF9EE 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── LIGHT RAYS ── */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150%;
+            height: 80%;
+            background: conic-gradient(
+                from 270deg at 50% 0%,
+                transparent 0deg,
+                rgba(255,230,80,0.06) 5deg,
+                transparent 10deg,
+                rgba(255,230,80,0.04) 18deg,
+                transparent 25deg,
+                rgba(255,230,80,0.07) 35deg,
+                transparent 42deg,
+                rgba(255,230,80,0.03) 55deg,
+                transparent 70deg
+            );
+            z-index: 0;
+            pointer-events: none;
+            animation: rays 12s infinite linear;
+        }
+        @keyframes rays { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
+
+        /* ── LAYOUT ── */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        /* ── HEADER ── */
+        header {
+            text-align: center;
+            padding: 5rem 1rem 3rem;
+        }
+
+        .city-icon {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        /* SVG‑inspired geometric city symbol */
+        .city-icon svg { width: 80px; height: 80px; filter: drop-shadow(0 4px 16px rgba(184,134,11,0.35)); }
+
+        .header-eyebrow {
+            display: inline-block;
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            border: 1px solid rgba(184,134,11,0.35);
+            padding: 0.35rem 1.2rem;
+            border-radius: 999px;
+            margin-bottom: 1.5rem;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(6px);
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 6vw, 3.8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            color: #1A1A2E;
+            margin-bottom: 1rem;
+        }
+        h1 em {
+            font-style: normal;
+            background: linear-gradient(135deg, var(--gold), var(--gold-shine), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-verse {
+            font-size: 0.9rem;
+            color: #6070908;
+            color: #607090;
+            max-width: 520px;
+            margin: 0 auto 0.5rem;
+            line-height: 1.7;
+            font-style: italic;
+        }
+        .header-citation {
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            color: rgba(184,134,11,0.7);
+            text-transform: uppercase;
+        }
+
+        /* ── SECTION INTRO ── */
+        .intro-box {
+            background: rgba(255,255,255,0.55);
+            border: 1px solid rgba(184,134,11,0.18);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            margin: 2rem 0 3rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.8) inset;
+        }
+        .intro-box p {
+            font-size: 0.95rem;
+            color: #4A5580;
+            line-height: 1.75;
+        }
+
+        /* ── SECTION HEADING ── */
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .section-heading span {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(184,134,11,0.3), transparent);
+        }
+        .section-heading h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--gold);
+            white-space: nowrap;
+        }
+
+        /* ── STUDY LINKS GRID ── */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .study-card {
+            position: relative;
+            background: rgba(255,255,255,0.65);
+            border: 1px solid rgba(184,134,11,0.15);
+            border-radius: 14px;
+            padding: 1.5rem 1.5rem 1.5rem 1.3rem;
+            text-decoration: none;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            backdrop-filter: blur(10px);
+            box-shadow:
+                0 2px 12px rgba(0,0,0,0.05),
+                0 0 0 1px rgba(255,255,255,0.9) inset;
+            transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .study-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 14px 14px 0 0;
+            background: linear-gradient(90deg, var(--gold), var(--gold-shine), var(--gold-light));
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .study-card:hover {
+            transform: translateY(-6px) perspective(600px) rotateX(2deg);
+            box-shadow: 0 16px 40px rgba(184,134,11,0.12), 0 0 0 1px rgba(184,134,11,0.25) inset;
+            border-color: rgba(184,134,11,0.35);
+            background: rgba(255,255,255,0.85);
+        }
+        .study-card:hover::before { opacity: 1; }
+
+        .card-gem {
+            min-width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        .gem-jasper   { background: linear-gradient(135deg, #ffe0e0, #f5c0c0); }
+        .gem-sapphire { background: linear-gradient(135deg, #ddeeff, #b0ccee); }
+        .gem-emerald  { background: linear-gradient(135deg, #d8f5e0, #a8ddb8); }
+        .gem-pearl    { background: linear-gradient(135deg, #fff8f0, #f0eae0); }
+        .gem-topaz    { background: linear-gradient(135deg, #fff3cc, #ffe080); }
+        .gem-amethyst { background: linear-gradient(135deg, #eeddff, #d0b0f0); }
+        .gem-gold     { background: linear-gradient(135deg, #fff0b0, #ffd060); }
+
+        .card-body { flex: 1; }
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #1A1A2E;
+            margin-bottom: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card-title .arrow {
+            opacity: 0;
+            transform: translateX(-4px);
+            transition: all 0.3s;
+            color: var(--gold);
+            font-size: 0.8rem;
+        }
+        .study-card:hover .card-title .arrow { opacity: 1; transform: translateX(0); }
+        .card-desc {
+            font-size: 0.78rem;
+            color: #8090B0;
+            line-height: 1.55;
+        }
+
+        /* ── GEMS SEPARATOR ── */
+        .gems-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2.5rem 0;
+            align-items: center;
+        }
+        .gem-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+        }
+        .gem-dot:nth-child(1) { background: #D4B8C0; }
+        .gem-dot:nth-child(2) { background: #B0CCEE; }
+        .gem-dot:nth-child(3) { background: #A8DDB8; }
+        .gem-dot:nth-child(4) { background: #F2D060; width:14px; height:14px; box-shadow: 0 0 12px rgba(242,208,80,0.7); }
+        .gem-dot:nth-child(5) { background: #A8DDB8; }
+        .gem-dot:nth-child(6) { background: #B0CCEE; }
+        .gem-dot:nth-child(7) { background: #D4B8C0; }
+
+        /* ── VERSE BLOCK ── */
+        .verse-block {
+            background: rgba(255,255,255,0.5);
+            border-left: 3px solid var(--gold-light);
+            padding: 1.2rem 1.5rem;
+            border-radius: 0 12px 12px 0;
+            backdrop-filter: blur(8px);
+            margin: 0.5rem 0 2rem;
+        }
+        .verse-block p {
+            font-style: italic;
+            color: #4A5A7A;
+            font-size: 0.9rem;
+            line-height: 1.75;
+        }
+        .verse-block cite {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: rgba(184,134,11,0.6);
+            text-transform: uppercase;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid rgba(184,134,11,0.15);
+            margin-top: 2rem;
+        }
+        footer p { font-size: 0.78rem; color: #A0A8C0; }
+        footer span { color: var(--gold); }
+
+        /* ── FLOAT ANIMATION ── */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .city-icon { animation: float 5s ease-in-out infinite; }
+
+        /* ── REVEAL ── */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .reveal.visible { opacity: 1; transform: none; }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+        .delay-5 { transition-delay: 0.5s; }
+        .delay-6 { transition-delay: 0.6s; }
+        .delay-7 { transition-delay: 0.7s; }
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+    <!-- ── HEADER ── -->
+    <header>
+        <div class="city-icon">
+            <!-- Geometric New Jerusalem icon -->
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Base glow -->
+                <circle cx="40" cy="40" r="36" fill="rgba(255,230,100,0.08)"/>
+                <!-- City walls (3D box) -->
+                <polygon points="20,52 40,44 60,52 60,62 40,70 20,62" fill="#FFF8E7" stroke="#C9A84C" stroke-width="1.2"/>
+                <polygon points="20,52 20,62 40,70 40,60 20,52" fill="#F5EDD0" stroke="#C9A84C" stroke-width="1.2"/>
+                <polygon points="40,44 60,52 40,60 20,52" fill="#FFF3C0" stroke="#C9A84C" stroke-width="1.2"/>
+                <!-- Main tower -->
+                <rect x="34" y="32" width="12" height="20" fill="#FFF8E7" stroke="#C9A84C" stroke-width="1.2"/>
+                <!-- Tower roof -->
+                <polygon points="34,32 40,22 46,32" fill="#FFE066" stroke="#C9A84C" stroke-width="1.2"/>
+                <!-- Windows -->
+                <rect x="37" y="38" width="6" height="8" rx="1" fill="#D4AF37" opacity="0.7"/>
+                <!-- Star on top -->
+                <circle cx="40" cy="20" r="3" fill="#FFE066"/>
+                <line x1="40" y1="15" x2="40" y2="25" stroke="#C9A84C" stroke-width="0.8"/>
+                <line x1="35" y1="20" x2="45" y2="20" stroke="#C9A84C" stroke-width="0.8"/>
+                <!-- Side columns -->
+                <rect x="21" y="44" width="5" height="10" fill="#FFF3C0" stroke="#C9A84C" stroke-width="0.8"/>
+                <rect x="54" y="44" width="5" height="10" fill="#FFF3C0" stroke="#C9A84C" stroke-width="0.8"/>
+            </svg>
+        </div>
+        <div class="header-eyebrow">Hub de Estudos Bíblicos</div>
+        <h1>A Nova<br><em>Jerusalém</em></h1>
+        <p class="header-verse">"E vi a santa cidade, a nova Jerusalém, descer do céu, da parte de Deus, adereçada como uma noiva ornamentada para o seu marido."</p>
+        <p class="header-citation">— Apocalipse 21:2</p>
+    </header>
+
+    <!-- ── INTRO ── -->
+    <div class="intro-box reveal">
+        <p>Esta é a <strong>página central de estudos</strong>. Cada estudo abaixo é uma joia — como os doze fundamentos da Nova Jerusalém, adornada com safiras, esmeraldas, jaspe e ouro puro. Escolha um tema e aprofunde-se na Palavra de Deus.</p>
+    </div>
+
+    <!-- ── LINKS DOS ESTUDOS ── -->
+    <div class="section-heading reveal">
+        <span></span>
+        <h2>✦ Estudos Disponíveis ✦</h2>
+        <span style="background:linear-gradient(to left, rgba(184,134,11,0.3), transparent);"></span>
+    </div>
+
+    <div class="links-grid">
+
+        <a href="estudo_espiritos.html" class="study-card reveal">
+            <div class="card-gem gem-jasper">🌊</div>
+            <div class="card-body">
+                <div class="card-title">Espíritos Marinhos <span class="arrow">→</span></div>
+                <p class="card-desc">Cônjuges espirituais, íncubos, súcubos e a batalha espiritual de Gênesis 6. Identificação e libertação.</p>
+            </div>
+        </a>
+
+        <a href="tema-eternidade.html" class="study-card reveal delay-1">
+            <div class="card-gem gem-sapphire">💎</div>
+            <div class="card-body">
+                <div class="card-title">Tema: Eternidade <span class="arrow">→</span></div>
+                <p class="card-desc">O que a Bíblia ensina sobre a vida eterna, o novo céu e a nova terra prometidos em Apocalipse.</p>
+            </div>
+        </a>
+
+        <a href="tema-graca.html" class="study-card reveal delay-2">
+            <div class="card-gem gem-emerald">💚</div>
+            <div class="card-body">
+                <div class="card-title">Tema: Graça <span class="arrow">→</span></div>
+                <p class="card-desc">O favor imerecido de Deus. Da queda em Éden à justificação pela fé — o fio dourado das Escrituras.</p>
+            </div>
+        </a>
+
+        <a href="tema-fe.html" class="study-card reveal delay-3">
+            <div class="card-gem gem-pearl">🤍</div>
+            <div class="card-body">
+                <div class="card-title">Tema: Fé <span class="arrow">→</span></div>
+                <p class="card-desc">A substância das coisas que se esperam. Hebreus 11 e os heróis da fé que atravessaram o impossível.</p>
+            </div>
+        </a>
+
+        <a href="tema-amor.html" class="study-card reveal delay-4">
+            <div class="card-gem gem-topaz">🌟</div>
+            <div class="card-body">
+                <div class="card-title">Tema: Amor <span class="arrow">→</span></div>
+                <p class="card-desc">1 Coríntios 13. O ágape de Deus que supera todo entendimento e é o cumprimento de toda a lei.</p>
+            </div>
+        </a>
+
+        <a href="tema-justificacao.html" class="study-card reveal delay-5">
+            <div class="card-gem gem-amethyst">🔮</div>
+            <div class="card-body">
+                <div class="card-title">Tema: Justificação <span class="arrow">→</span></div>
+                <p class="card-desc">Romanos e a doutrina da justificação pela fé, não pelas obras. O alicerce da Reforma Protestante.</p>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- ── GEMS DIVIDER ── -->
+    <div class="gems-row reveal">
+        <div class="gem-dot"></div>
+        <div class="gem-dot"></div>
+        <div class="gem-dot"></div>
+        <div class="gem-dot"></div>
+        <div class="gem-dot"></div>
+        <div class="gem-dot"></div>
+        <div class="gem-dot"></div>
+    </div>
+
+    <!-- ── VERSES ── -->
+    <div class="section-heading reveal">
+        <span></span>
+        <h2>✦ A Cidade Celeste ✦</h2>
+        <span style="background:linear-gradient(to left, rgba(184,134,11,0.3), transparent);"></span>
+    </div>
+
+    <div class="verse-block reveal delay-1">
+        <p>"A cidade é de ouro puro, semelhante ao vidro puro. Os fundamentos do muro da cidade estão adornados com toda sorte de pedras preciosas: o primeiro fundamento é jaspe; o segundo, safira; o terceiro, calcedônia; o quarto, esmeralda..."</p>
+        <cite>— Apocalipse 21:18–19</cite>
+    </div>
+
+    <div class="verse-block reveal delay-2">
+        <p>"E as doze portas são doze pérolas; cada uma das portas era feita de uma só pérola. E a rua da cidade era de ouro puro, como vidro transparente. Não vi nenhum templo nela, porque o Senhor Deus Todo-Poderoso e o Cordeiro são o seu templo."</p>
+        <cite>— Apocalipse 21:21–22</cite>
+    </div>
+
+    <div class="verse-block reveal delay-3">
+        <p>"E mostrou-me um rio puro de água da vida, límpido como cristal, que procedia do trono de Deus e do Cordeiro. No meio da sua rua e de um e do outro lado do rio, estava a árvore da vida."</p>
+        <cite>— Apocalipse 22:1–2</cite>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+        <p>© 2026 <span>Hub Educacional Bíblico</span> — Todos os direitos reservados.</p>
+        <p style="margin-top:0.4rem;">Inspirado em <span>Apocalipse 21 & 22</span> — A Nova Jerusalém</p>
+    </footer>
+
+</div>
+
+<script>
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    reveals.forEach(el => obs.observe(el));
+
+    // 3D tilt on cards
+    document.querySelectorAll('.study-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width - 0.5;
+            const y = (e.clientY - r.top) / r.height - 0.5;
+            card.style.transform = `perspective(700px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-6px)`;
+        });
+        card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+    });
+</script>
+</body>
+</html>
