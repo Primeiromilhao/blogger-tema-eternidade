@@ -37,10 +37,10 @@ body::before{
 
 /* ── NAV ── */
 nav{position:sticky;top:0;z-index:100;background:rgba(248,253,255,0.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
-.nav-wrap{max-width:1100px;margin:0 auto;padding:.85rem 1.5rem;display:flex;align-items:center;gap:1rem}
+.nav-wrap{max-width:1100px;margin:0 auto;padding:.85rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
 .nav-logo{font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;color:var(--river-d);letter-spacing:.1em;text-decoration:none;flex-shrink:0}
 .nav-logo em{color:var(--gold);font-style:normal}
-nav ul{display:flex;gap:.1rem;list-style:none;margin-left:auto}
+nav ul{display:flex;gap:.1rem;list-style:none;margin-left:auto;flex-wrap:wrap;justify-content:center;}
 nav a{color:var(--text-m);text-decoration:none;font-size:.78rem;font-weight:500;padding:.4rem .75rem;border-radius:8px;transition:all .25s}
 nav a:hover{color:var(--river-d);background:rgba(91,168,208,.1)}
 
@@ -52,7 +52,7 @@ nav a:hover{color:var(--river-d);background:rgba(91,168,208,.1)}
 .hero-verse{font-size:.95rem;color:var(--text-m);max-width:520px;margin:0 auto .6rem;line-height:1.75;font-style:italic}
 .hero-cite{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(91,168,208,.8)}
 .hero-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
-.btn{display:inline-block;text-decoration:none;font-size:.8rem;font-weight:600;padding:.7rem 1.7rem;border-radius:999px;transition:all .3s;cursor:pointer;border:none;font-family:'Inter',sans-serif}
+.btn{display:inline-block;text-decoration:none;font-size:.8rem;font-weight:600;padding:.7rem 1.7rem;border-radius:999px;transition:all .3s;cursor:pointer;border:none;font-family:'Inter',sans-serif;text-align:center;}
 .btn-river{background:linear-gradient(135deg,var(--river-d),#3A88BB);color:#fff;box-shadow:0 4px 20px rgba(91,168,208,.35)}
 .btn-river:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(91,168,208,.45)}
 .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;box-shadow:0 4px 20px rgba(184,134,11,.3)}
@@ -73,7 +73,6 @@ nav a:hover{color:var(--river-d);background:rgba(91,168,208,.1)}
 
 /* ── MAIN LAYOUT ── */
 .main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:3rem 1.5rem;display:grid;grid-template-columns:1fr 300px;gap:2rem}
-@media(max-width:860px){.main{grid-template-columns:1fr}}
 
 /* ── SECTION LABELS ── */
 .sec-lbl{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem}
@@ -83,7 +82,7 @@ nav a:hover{color:var(--river-d);background:rgba(91,168,208,.1)}
 /* ── GLASS CARD ── */
 .glass{background:var(--card);border:1px solid rgba(255,255,255,.8);border-radius:18px;backdrop-filter:blur(12px);box-shadow:0 2px 16px rgba(91,168,208,.08)}
 
-/* ── FEATURED (rotates daily) ── */
+/* ── FEATURED ── */
 .featured{margin-bottom:2.5rem}
 .feat-card{display:none;border-radius:20px;overflow:hidden;box-shadow:0 4px 30px rgba(0,0,0,.08);transition:box-shadow .3s}
 .feat-card.active{display:block}
@@ -98,7 +97,6 @@ nav a:hover{color:var(--river-d);background:rgba(91,168,208,.1)}
 .feat-excerpt{font-size:.83rem;color:var(--text-m);line-height:1.65;max-width:420px}
 .feat-link{text-decoration:none;font-size:.78rem;font-weight:600;color:var(--river-d);border:1.5px solid var(--border);padding:.55rem 1.3rem;border-radius:999px;white-space:nowrap;transition:all .3s;flex-shrink:0;margin-left:1rem}
 .feat-link:hover{background:var(--river-d);color:#fff;border-color:var(--river-d)}
-/* themes for each day */
 .theme-0 .feat-top{background:linear-gradient(135deg,#12213A,#1A3A6A)}
 .theme-0 .feat-top h3,.theme-0 .feat-top p,.theme-0 .feat-desc{color:#fff}
 .theme-0 .feat-tag{background:rgba(255,229,102,.15);color:#FFE566;border:1px solid rgba(255,229,102,.3)}
@@ -196,14 +194,48 @@ textarea.fi{resize:vertical;min-height:80px}
 .toast-msg span{color:var(--text-l);font-size:.78rem}
 /* loading state */
 .btn:disabled{opacity:.6;cursor:not-allowed}
+
+/* ── MEDIA QUERIES (MOBILE OPTIMIZATION) ── */
+@media(max-width:860px) {
+  .main{grid-template-columns:1fr;}
+}
+
+@media(max-width: 768px) {
+  /* Navigation */
+  .nav-wrap { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+  nav ul { margin-left: 0; justify-content: center; width: 100%; gap: 0.5rem; }
+  nav a { padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+
+  /* Hero Section */
+  .hero { padding: 4rem 1.2rem 2.5rem; }
+  .hero h1 { font-size: clamp(2rem, 8vw, 2.5rem); }
+  .hero-btns { flex-direction: column; width: 100%; align-items: stretch; }
+  .btn { width: 100%; }
+
+  /* Featured Card */
+  .feat-top { padding: 1.5rem; }
+  .feat-card h3 { font-size: 1.3rem; }
+  .feat-foot { flex-direction: column; align-items: flex-start; gap: 1.2rem; padding: 1.2rem 1.5rem; }
+  .feat-link { margin-left: 0; width: 100%; text-align: center; }
+
+  /* Forms and Grids */
+  .comment-row { grid-template-columns: 1fr; }
+  
+  /* Utilities and Spacing */
+  .curio { padding: 1rem; }
+  .prayer-box, .comment-box { padding: 1.2rem; }
+  .w { padding: 1.2rem; }
+  
+  /* Toast Notification */
+  .toast { right: 1rem; left: 1rem; bottom: 1rem; width: auto; max-width: 100%; flex-direction: column; text-align: center; }
+  .toast-ico { margin-bottom: 0.5rem; }
+}
 </style>
 </head>
 <body>
 
-<!-- RIVER CANVAS -->
 <canvas id="river-canvas"></canvas>
 
-<!-- NAV -->
 <nav>
   <div class="nav-wrap">
     <a href="#" class="nav-logo">Nova <em>Jerusalém</em></a>
@@ -216,7 +248,6 @@ textarea.fi{resize:vertical;min-height:80px}
   </div>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-eyebrow">✦ Centro de Estudo Bíblico Online ✦</div>
   <h1>Bem-vindo ao Centro de<br><em>Leitura que Cura</em></h1>
@@ -228,21 +259,16 @@ textarea.fi{resize:vertical;min-height:80px}
   </div>
 </div>
 
-<!-- RIVER DIVIDER -->
 <div class="river-divider"><canvas id="river-divider-canvas"></canvas></div>
 
-<!-- TICKER (Provérbios) -->
 <div class="ticker">
   <div class="ticker-inner" id="ticker-content">
-    <!-- filled by JS -->
-  </div>
+    </div>
 </div>
 
-<!-- MAIN -->
 <div class="main">
   <div>
 
-    <!-- FEATURED (rotates daily) -->
     <div id="estudos" class="sec-lbl rv"><h2>✦ Estudo em Destaque</h2></div>
     <div class="featured rv d1">
 
@@ -285,10 +311,7 @@ textarea.fi{resize:vertical;min-height:80px}
         </div>
       </div>
 
-    </div><!-- /featured -->
-
-    <!-- CURIOSIDADES -->
-    <div id="curiosidades" class="sec-lbl rv"><h2>✦ Você Sabia?</h2></div>
+    </div><div id="curiosidades" class="sec-lbl rv"><h2>✦ Você Sabia?</h2></div>
     <div class="curiosidades">
       <div class="curio rv tilt">
         <div class="curio-ico">💧</div>
@@ -324,7 +347,6 @@ textarea.fi{resize:vertical;min-height:80px}
       </div>
     </div>
 
-    <!-- PRAYERS -->
     <div id="oracao" class="sec-lbl rv"><h2>✦ Pedidos de Oração</h2></div>
     <div class="prayer-box rv">
       <h3>🙏 Deixe seu Pedido de Oração</h3>
@@ -335,7 +357,7 @@ textarea.fi{resize:vertical;min-height:80px}
           <input class="fi" type="text" id="prayer-topic" placeholder="Assunto (ex: cura, família...)">
         </div>
         <textarea class="fi" id="prayer-text" placeholder="Descreva brevemente seu pedido de oração..."></textarea>
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
           <span style="font-size:.72rem;color:var(--text-l);font-style:italic">"Confessai as vossas faltas uns aos outros e orai uns pelos outros." — Tiago 5:16</span>
           <button class="btn btn-river btn-send" onclick="submitPrayer(this)">Enviar Pedido ✦</button>
         </div>
@@ -352,7 +374,6 @@ textarea.fi{resize:vertical;min-height:80px}
       </div>
     </div>
 
-    <!-- COMMENTS -->
     <div id="comentarios" class="sec-lbl rv"><h2>✦ Comunidade</h2></div>
     <div class="comment-box rv glass">
       <h3>💬 Deixe seu Comentário</h3>
@@ -363,7 +384,7 @@ textarea.fi{resize:vertical;min-height:80px}
           <input class="fi" type="email" id="c-email" placeholder="E-mail (não publicado)">
         </div>
         <textarea class="fi" id="c-text" placeholder="Compartilhe sua reflexão ou pergunta sobre os estudos..."></textarea>
-        <div style="text-align:right">
+        <div style="display:flex; justify-content:flex-end;">
           <button class="btn btn-outline btn-send" onclick="submitComment(this)">Publicar Comentário →</button>
         </div>
       </div>
@@ -385,10 +406,7 @@ textarea.fi{resize:vertical;min-height:80px}
       </div>
     </div>
 
-  </div><!-- /col-main -->
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
+  </div><aside class="sidebar">
 
     <div class="w verse-widget rv">
       <div class="w-title">✦ Versículo do Dia</div>
@@ -421,10 +439,7 @@ textarea.fi{resize:vertical;min-height:80px}
     </div>
 
   </aside>
-</div><!-- /main -->
-
-<!-- FOOTER -->
-<footer style="position:relative;z-index:1;background:#080E1C;color:rgba(255,255,255,.45);text-align:center;padding:2.5rem 1.5rem;border-top:1px solid rgba(91,168,208,.15)">
+</div><footer style="position:relative;z-index:1;background:#080E1C;color:rgba(255,255,255,.45);text-align:center;padding:2.5rem 1.5rem;border-top:1px solid rgba(91,168,208,.15)">
   <p style="font-family:'Cinzel',serif;font-size:.8rem;color:rgba(91,168,208,.6);margin-bottom:.4rem">Nova Jerusalém ✦ Escola Bíblica Online</p>
   <p style="font-size:.72rem">© 2026 Hub Educacional Bíblico — Inspirado em <span style="color:rgba(255,229,102,.5)">Ap 21–22</span> & <span style="color:rgba(255,229,102,.5)">Ez 40–48</span></p>
 </footer>
