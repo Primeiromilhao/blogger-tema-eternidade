@@ -210,6 +210,7 @@
       <li><a href="#biblioteca">Livros</a></li>
       <li><a href="#curiosidades">Curiosidades</a></li>
       <li><a href="#oracao">Comunhão</a></li>
+       <li><a href="#links">✦ Links Rápidos</a></li>
     </ul>
   </div>
 </nav>
@@ -767,6 +768,132 @@ function init3D() {
 }
 // Dá um pequeno atraso para garantir que os estudos dinâmicos renderizaram antes de aplicar o evento 3D
 window.addEventListener('load', () => setTimeout(init3D, 100));
+</script>
+
+  <!-- Scripts Funcionalidades: Newsletter, Pedidos, Versículo Diário -->
+<script>
+// ============ 1. NEWSLETTER FUNCIONAL ============
+document.addEventListener('DOMContentLoaded', function() {
+  const newsletterForm = document.querySelector('[placeholder="seu@email.com"]');
+  const subscribeBtn = document.querySelector('.w form button, .w button') || document.evaluate("//button[contains(text(), 'Inscrever')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+  
+  if (newsletterForm && subscribeBtn) {
+    subscribeBtn.addEventListener('click', function(e) {
+      const email = newsletterForm.value.trim();
+      if (!email) {
+        alert('╳️ Por favor, insira seu email');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('⚠️ Por favor, insira um email válido');
+        return;
+      }
+      localStorage.setItem('newsletter_email_' + Date.now(), email);
+      alert('✅ Obrigado! Você foi inscrito na Newsletter!');
+      newsletterForm.value = '';
+    });
+  }
+});
+
+// ============ 2. DEIXE SEU PEDIDO FUNCIONAL ============
+document.addEventListener('DOMContentLoaded', function() {
+  const formInputs = document.querySelectorAll('.comment-form .fi');
+  const submitBtn = document.querySelector('.comment-form button') || document.evaluate("//button[contains(text(), 'Enviar')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+  
+  if (submitBtn) {
+    submitBtn.addEventListener('click', function(e) {
+      let nome = formInputs[0]?.value.trim() || 'Anônimo';
+      let assunto = formInputs[1]?.value.trim() || 'Pedido geral';
+      let pedido = formInputs[2]?.value.trim() || '';
+      
+      if (!pedido) {
+        alert('╳️ Por favor, descreva seu ped ido');
+        return;
+      }
+      
+      const pedidoData = {
+        nome: nome,
+        assunto: assunto,
+        pedido: pedido,
+        data: new Date().toLocaleString('pt-BR')
+      };
+      
+      localStorage.setItem('pedido_' + Date.now(), JSON.stringify(pedidoData));
+      alert('✅ Seu ped ido foi registrado! Obrigado pela confiança.');
+      
+      formInputs.forEach(input => input.value = '');
+    });
+  }
+});
+
+// ============ 3. VERÍCULO DO DIA VARIADO (PROVÉRBIOS) ============
+const proverbios = [
+  { verso: 'Pv 3:5-6', texto: '"Confia no Senhor de todo o teu coração, e não te estribes no teu próprio entendimento."' },
+  { verso: 'Pv 22:6', texto: '"Ensina a criança no caminho em que deve andar..."' },
+  { verso: 'Pv 27:12', texto: '"O prudente vê o mal e se esconde, mas os símplices passam e sofrem a pena."' },
+  { verso: 'Pv 15:22', texto: '"Sem conselho os planos se desfazem, mas com a multidão de conselheiros se estabelecem."' },
+  { verso: 'Pv 9:10', texto: '"O temor do Senhor é o princípio da sabedoria..."' },
+  { verso: 'Pv 17:22', texto: '"O coração alegre é bom med icamento, mas o espírito abatido resseca os ossos."' },
+  { verso: 'Pv 13:20', texto: '"Quem anda com sábios será sábio, mas o companheiro dos tolos sofrerá mal."' },
+  { verso: 'Pv 11:25', texto: '"A alma generosa será abastecida, e quem regar será regado."' },
+  { verso: 'Pv 20:5', texto: '"O pensamento humano é como água profunda, mas o homem perspicaz consegue extrair as suas intencões."' },
+  { verso: 'Pv 14:12', texto: '"Há um caminho que ao homem parece direito, mas cujo fim conduz à morte."' },
+  { verso: 'Pv 31:25', texto: '"A força e a dignidade são as suas roupagens, e ela ri do tempo porvir."' },
+  { verso: 'Pv 10:19', texto: '"Nas muitas palavras não falta transgressão, mas quem refreia os seus lábios é prudente."' },
+  { verso: 'Pv 12:15', texto: '"O caminho do insensato é direito aos seus olhos, mas quem dá ouvidos ao conselho é sábio."' },
+  { verso: 'Pv 19:20', texto: '"Ouve o conselho e aceita a disciplina, para que sejas sábio no tempo vindouro."' },
+  { verso: 'Pv 8:11', texto: '"Porque a sabedoria é melhor que jóias, e tudo o que se pode desejar não se compara com ela."' },
+];
+
+function atualizarVersiculoDoDia() {
+  const hoje = new Date().toDateString();
+  const storageDateKey = 'versiculo_data';
+  const storageVersoKey = 'versiculo_verso';
+  const lastDate = localStorage.getItem(storageDateKey);
+  
+  let versiculoAtual;
+  if (lastDate !== hoje) {
+    const indice = Math.floor(Math.random() * proverbios.length);
+    versiculoAtual = proverbios[indice];
+    localStorage.setItem(storageDateKey, hoje);
+    localStorage.setItem(storageVersoKey, JSON.stringify(versiculoAtual));
+  } else {
+    versiculoAtual = JSON.parse(localStorage.getItem(storageVersoKey));
+  }
+  
+  const versiculoDiv = document.querySelector('[style*="Versículo"]') || document.evaluate("//div[contains(text(), 'Versículo')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+  if (versiculoDiv) {
+    const versoElement = versiculoDiv.querySelector('em, strong') || versiculoDiv.querySelector('*');
+    if (versoElement) versoElement.textContent = versiculoAtual.verso;
+    const textoElement = versiculoDiv.querySelector('blockquote, p') || versiculoDiv.nextElementSibling;
+    if (textoElement) textoElement.textContent = versiculoAtual.texto;
+  }
+}
+
+atualizarVersiculoDoDia();
+
+// ============ 4. LINKS RÁPIDOS - ID DA SEÇÃO ============
+const linksSection = document.querySelector('[id="links"]');
+if (!linksSection) {
+  const novaSecao = document.createElement('div');
+  novaSecao.id = 'links';
+  novaSecao.innerHTML = `
+    <div class="sec-lbl rv" style="margin-top:2rem;">
+      <h2>♦ Links Rápidos</h2>
+    </div>
+    <div style="text-align: center; margin: 2rem 0;">
+      <p style="color: var(--text-m); margin-bottom: 1rem;">Acesso rápido aos recursos principais:</p>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+        <a href="#estudos" class="btn btn-river" style="padding: 10px 20px; font-size: 0.9rem;">Estudos</a>
+        <a href="#biblioteca" class="btn btn-gold" style="padding: 10px 20px; font-size: 0.9rem;">Biblioteca</a>
+        <a href="#curiosidades" class="btn btn-outline" style="padding: 10px 20px; font-size: 0.9rem;">Curiosidades</a>
+        <a href="#oracao" class="btn btn-river" style="padding: 10px 20px; font-size: 0.9rem;">Comunhão</a>
+      </div>
+    </div>
+  `;
+  const footer = document.querySelector('footer') || document.body;
+  footer.insertBefore(novaSecao, footer.lastElementChild);
+}
 </script>
 </body>
 </html>
