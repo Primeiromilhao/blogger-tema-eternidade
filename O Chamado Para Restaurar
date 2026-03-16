@@ -186,6 +186,13 @@
             Das <span class="gold-text">Ruínas</span> à <span class="gold-text">Redenção</span>
         </h1>
 
+<!-- Botão de Download -->
+<div style="margin: 20px 0; text-align: center;">
+  <a href="https://drive.google.com/uc?export=download&id=1xqA_jX1mKArbWgSCcxv_H3-KF29ambSC" style="display: inline-block; background: linear-gradient(135deg, #2196F3, #1976D2); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.boxShadow='0 4px 15px rgba(33, 150, 243, 0.5)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 2px 8px rgba(33, 150, 243, 0.3)'; this.style.transform='translateY(0)';">
+    ⬇️ Baixar Estudo em PDF
+  </a>
+</div>
+
         <p class="text-lg text-slate-300 max-w-2xl mx-auto mb-10 high-contrast-text">
             Um mergulho profético na restauração dos muros, no fechamento das brechas
             e na reparação daquilo que foi quebrado, baseado no livro de Neemias.
