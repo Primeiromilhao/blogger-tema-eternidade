@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <!-- ============================================================= -->
+    <!-- 1️⃣ METADADOS                                                -->
+    <!-- ============================================================= -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="Estudo profundo do livro de Neemias – 4 atitudes do restaurador, a anatomia das portas de Jerusalém e como vencer a oposição.">
+    <title>Estudo Profundo 3D | O Chamado Para Restaurar</title>
+
+    <!-- ============================================================= -->
+    <!-- 2️⃣ TAILWIND + LUCIDE (ícones) + THREE.JS                     -->
+    <!-- ============================================================= -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- ============================================================= -->
+    <!-- 3️⃣ ESTILO PERSONALIZADO (CSS)                                -->
+    <!-- ============================================================= -->
+    <style>
+        /* -----------------------------------------------------------------
+           3.1 Paleta de cores – variáveis para fácil manutenção
+        ----------------------------------------------------------------- */
+        :root {
+            --bg-deep        : #020617;
+            --gold-primary   : #d4af37;
+            --gold-light     : #fde047;
+            --txt-body       : #e2e8f0;   /* contraste aumentado */
+            --txt-heading    : #ffffff;  /* branco puro */
+            --focus-outline  : 3px solid var(--gold-primary);
+        }
+
+        /* -----------------------------------------------------------------
+           3.2 Tipografia e espaçamento base
+        ----------------------------------------------------------------- */
+        html { font-size: 110%; }         /* ≈ 18 px – melhor para idosos   */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--txt-heading);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4 { color: var(--txt-heading); }
+        a  { color: var(--gold-light);   transition: color .2s; }
+        a:hover, a:focus-visible { color: var(--gold-primary); }
+
+        /* -----------------------------------------------------------------
+           3.3 Componentes reutilizáveis
+        ----------------------------------------------------------------- */
+        .glass {
+            background: rgba(30,41,59,.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212,175,55,.12);
+        }
+        .drop-cap::first-letter {
+            float: left;
+            font-size: 4.5rem;
+            line-height: .8;
+            padding-right: .5rem;
+            color: var(--gold-primary);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,100%{ transform: translateY(0) rotate(0deg); }
+            50%    { transform: translateY(-20px) rotate(2deg); }
+        }
+        .rotate-3d{ transform-style: preserve-3d; transition: transform .8s cubic-bezier(.23,1,.32,1); }
+        .rotate-3d:hover{ transform: rotateY(10deg) rotateX(5deg); }
+
+        /* -----------------------------------------------------------------
+           3.4 Scroll‑progress bar
+        ----------------------------------------------------------------- */
+        .scroll-progress{
+            position: fixed;
+            top:0; left:0; height:5px;
+            background: linear-gradient(90deg,var(--gold-primary),var(--gold-light));
+            width:0%; z-index:1000;
+        }
+
+        /* -----------------------------------------------------------------
+           3.5 Botão de “Alto Contraste”
+        ----------------------------------------------------------------- */
+        #accessibility{
+            position:fixed; bottom:1.5rem; right:1.5rem;
+            width:60px; height:60px; border-radius:50%;
+            background:var(--gold-primary); color:#020617;
+            display:flex; align-items:center; justify-content:center;
+            font-weight:900; font-size:1.4rem;
+            cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.3);
+            z-index:1000;
+        }
+        #accessibility:focus-visible{
+            outline: var(--focus-outline);
+        }
+
+        /* -----------------------------------------------------------------
+           3.6 Alto contraste – trocado via classe .high-contrast
+        ----------------------------------------------------------------- */
+        .high-contrast{
+            --txt-body   : #ffffff;
+            --txt-heading: #ffffff;
+        }
+
+        /* -----------------------------------------------------------------
+           3.7 Acessibilidade – foco visível
+        ----------------------------------------------------------------- */
+        .focus-visible:focus-visible{
+            outline: var(--focus-outline);
+        }
+    </style>
+</head>
+
+<body class="selection:bg-yellow-900 selection:text-white">
+
+    <!-- --------------------------------------------------------------- -->
+    <!-- 4️⃣ CANVAS 3D (fundo)                                            -->
+    <!-- --------------------------------------------------------------- -->
+    <div id="three-canvas"></div>
+
+    <!-- --------------------------------------------------------------- -->
+    <!-- 5️⃣ BARRA DE PROGRESSO DE LEITURA                                 -->
+    <!-- --------------------------------------------------------------- -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- --------------------------------------------------------------- -->
+    <!-- 6️⃣ BOTÃO DE CONTRASTE                                            -->
+    <!-- --------------------------------------------------------------- -->
+    <button id="accessibility"
+            aria-label="Alternar modo de alto contraste"
+            title="Alto contraste"
+            class="focus-visible">
+        A
+    </button>
+
+    <!-- --------------------------------------------------------------- -->
+    <!-- 7️⃣ NAVEGAÇÃO FIXA                                                -->
+    <!-- --------------------------------------------------------------- -->
+    <nav class="fixed inset-x-0 top-0 z-50 bg-slate-950/95 border-b border-white/5
+                backdrop-blur-md flex items-center h-20 px-6"
+         aria-label="Menu principal">
+        <div class="flex-1 flex items-center gap-3">
+            <i data-lucide="book-open" class="text-yellow-500" size="22" aria-hidden="true"></i>
+            <span class="font-serif italic text-lg tracking-wide high-contrast-text">
+                O Chamado Para Restaurar
+            </span>
+        </div>
+
+        <div class="hidden md:flex gap-8 text-sm font-bold uppercase tracking-wider">
+            <a href="#contexto"    class="high-contrast-link">O Retorno</a>
+            <a href="#atitudes"   class="high-contrast-link">As 4 Atitudes</a>
+            <a href="#portas"     class="high-contrast-link">Mistério das Portas</a>
+            <a href="#oposicao"   class="high-contrast-link">A Oposição</a>
+        </div>
+
+        <button id="toggle-3d"
+                class="glass p-2 rounded-md hover:bg-yellow-500/10 focus-visible:focus-visible"
+                aria-pressed="true"
+                title="Desligar/ligar efeitos 3D"
+                aria-label="Alternar efeitos 3D">
+            <i data-lucide="box" class="text-yellow-500" size="22" aria-hidden="true"></i>
+        </button>
+    </nav>
+
+    <!-- --------------------------------------------------------------- -->
+    <!-- 8️⃣ HEADER – Apresentação                                         -->
+    <!-- --------------------------------------------------------------- -->
+    <header class="pt-32 pb-20 max-w-4xl mx-auto text-center border-b border-white/5
+                   overflow-hidden">
+        <p class="inline-block py-2 px-4 border border-yellow-500/30 rounded-full
+                  text-xs uppercase tracking-wider text-yellow-500 mb-6
+                  rotate-3d high-contrast-text">
+            Guia de Estudo Aprofundado 3D
+        </p>
+
+        <h1 class="text-5xl md:text-7xl font-serif italic mb-6 leading-tight 
+                   rotate-3d">
+            Das <span class="gold-text">Ruínas</span> à <span class="gold-text">Redenção</span>
+        </h1>
+
+        <p class="text-lg text-slate-300 max-w-2xl mx-auto mb-10 high-contrast-text">
+            Um mergulho profético na restauração dos muros, no fechamento das brechas
+            e na reparação daquilo que foi quebrado, baseado no livro de Neemias.
+        </p>
+
+        <div class="inline-flex items-center gap-3 bg-slate-900/80 px-6 py-3 rounded-full
+                    border border-white/5 rotate-3d">
+            <i data-lucide="pen-tool" class="text-yellow-600" size="20" aria-hidden="true"></i>
+            <span class="text-sm font-bold uppercase tracking-widest text-slate-300">
+                Autor: Wagner Cordeiro Santos
+            </span>
+        </div>
+    </header>
+
+    <!-- --------------------------------------------------------------- -->
+    <!-- 9️⃣ CONTEÚDO PRINCIPAL                                            -->
+    <!-- --------------------------------------------------------------- -->
+    <main class="max-w-4xl mx-auto py-20 px-6 space-y-28 reading-section">
+
+        <!-- ---------- 9.1 CONTEXTO ---------- -->
+        <section id="contexto" class="parallax-section depth-section" style="--depth:10">
+            <article class="glass p-10 rounded-2xl drop-cap high-contrast-text">
+                <p>
+                    A história da restauração de Jerusalém não é apenas um relato
+                    arquitetónico ou político; é o espelho do agir de Deus na alma
+                    humana. Quando o povo de Israel foi levado cativo para a
+                    Babilónia, a promessa divina era de que o cativeiro duraria
+                    70 anos. O retorno não aconteceu de uma só vez, mas em três
+                    fases distintas, cada uma revelando um aspecto do caráter
+                    restaurador de Deus.
+                </p>
+
+                <p class="mt-6">
+                    Na <strong>primeira fase (538 a.C.)</strong>, sob a liderança
+                    de Zorobabel, o foco principal foi a reconstrução do Templo.
+                    O altar precisava ser reerguido; a adoração precisava voltar ao
+                    centro. Sem adoração, não há fundamento para a vida
+                    espiritual. Na <strong>segunda fase (458 a.C.)</strong>,
+                    Esdras lidera o povo com foco na Palavra. De nada adianta o
+                    Templo estar de pé se o coração do povo estiver corrompido;
+                    a Lei precisava ser ensinada e vivida.
+                </p>
+
+                <p class="mt-6">
+                    Contudo, o Templo e a Palavra estavam vulneráveis.
+                    Jerusalém continuava cercada de escombros, sem muros e sem
+                    portas. É aqui que entra a <strong>terceira fase (444 a.C.)</strong>
+                    e a chamada de Neemias. A ausência de muros significa
+                    ausência de limites, de defesa e de identidade. Uma vida sem
+                    muros é uma vida onde qualquer influência externa entra e
+                    destrói o que está a ser edificado no interior.
+                </p>
+            </article>
+
+            <blockquote class="relative mt-14 p-10 glass border-l-4 border-yellow-500
+                               rounded-r-2xl italic text-2xl high-contrast-text">
+                “Deus nos chama a encarar nossas ruínas com esperança. Ele não
+                apenas reconstrói o que foi quebrado, mas redime nossa história,
+                nos dando propósito, identidade e força.”
+                <footer class="mt-6 text-sm uppercase tracking-wider text-yellow-500">
+                    — O Chamado Para Restaurar
+                </footer>
+            </blockquote>
+        </section>
+
+        <!-- ---------- 9.2 AS 4 ATITUDES ---------- -->
+        <section id="atitudes" class="parallax-section depth-section" style="--depth:20">
+            <div class="flex items-center gap-6 mb-12">
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent to-yellow-500/30"></div>
+                <h2 class="text-4xl font-serif italic high-contrast-text">
+                    O Coração do Reconstrutor
+                </h2>
+                <div class="flex-1 h-px bg-gradient-to-l from-transparent to-yellow-500/30"></div>
+            </div>
+
+            <p class="text-center max-w-3xl mx-auto high-contrast-text">
+                No Capítulo 1 vemos que a primeira reação de Neemias ao ouvir
+                sobre a miséria de Jerusalém não foi o ativismo imediato. A
+                verdadeira liderança começa no oculto, através de quatro atitudes
+                sequenciais e cruciais.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-12 mt-12">
+                <!-- 1️⃣ Assentar‑se -->
+                <article class="card-3d glass p-8 rounded-xl glow-border
+                                 high-contrast-text"
+                         onmouseover="setCardRotate(this,5,-5)"
+                         onmouseout="resetCardRotate(this)">
+                    <div class="flex justify-center mb-6">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-br
+                                    from-yellow-500/20 to-yellow-500/5
+                                    border-2 border-yellow-500/30
+                                    flex items-center justify-center">
+                            <span class="text-3xl font-serif text-yellow-500">1</span>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center mb-4">Assentar‑se</h3>
+                    <p>
+                        Antes de correr para resolver o problema, Neemias sentou‑se.
+                        O “assentar” fala de parar a própria força, de reflexão,
+                        de absorver a gravidade da situação em silêncio antes de
+                        procurar auxílio humano. É o fim da autoconfiança.
+                    </p>
+                </article>
+
+                <!-- 2️⃣ Chorar -->
+                <article class="card-3d glass p-8 rounded-xl glow-border
+                                 high-contrast-text"
+                         onmouseover="setCardRotate(this,-5,-5)"
+                         onmouseout="resetCardRotate(this)">
+                    <div class="flex justify-center mb-6">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-br
+                                    from-yellow-500/20 to-yellow-500/5
+                                    border-2 border-yellow-500/30
+                                    flex items-center justify-center">
+                            <span class="text-3xl font-serif text-yellow-500">2</span>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center mb-4">Chorar</h3>
+                    <p>
+                        O choro de Neemias não era desespero, era empatia divina.
+                        Ele permitiu que o seu coração fosse quebrado pelas mesmas
+                        coisas que quebravam o coração de Deus. Sem quebrantamento,
+                        a restauração torna‑se apenas um projeto mecânico.
+                    </p>
+                </article>
+
+                <!-- 3️⃣ Lamentar -->
+                <article class="card-3d glass p-8 rounded-xl glow-border
+                                 high-contrast-text"
+                         onmouseover="setCardRotate(this,5,5)"
+                         onmouseout="resetCardRotate(this)">
+                    <div class="flex justify-center mb-6">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-br
+                                    from-yellow-500/20 to-yellow-500/5
+                                    border-2 border-yellow-500/30
+                                    flex items-center justify-center">
+                            <span class="text-3xl font-serif text-yellow-500">3</span>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center mb-4">Lamentar</h3>
+                    <p>
+                        O lamento é o reconhecimento verbal do luto. É olhar para as
+                        ruínas da família, das finanças ou da igreja e ter a coragem
+                        de dizer: “Nós pecámos. Nós falhámos”. É a confissão honesta
+                        do estado atual.
+                    </p>
+                </article>
+
+                <!-- 4️⃣ Orar e Jejuar -->
+                <article class="card-3d glass p-8 rounded-xl glow-border border-yellow-500/30
+                                 high-contrast-text"
+                         onmouseover="setCardRotate(this,-5,5)"
+                         onmouseout="resetCardRotate(this)">
+                    <div class="flex justify-center mb-6">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-br
+                                    from-yellow-500/20 to-yellow-500/5
+                                    border-2 border-yellow-500/30
+                                    flex items-center justify-center">
+                            <span class="text-3xl font-serif text-yellow-500">4</span>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center mb-4">Orar e Jejuar</h3>
+                    <p>
+                        A tristeza sem oração leva à depressão. A tristeza com oração
+                        leva à ação profética. Neemias jejuou porque percebeu que a
+                        batalha não era contra o rei Artaxerxes ou contra as pedras
+                        queimadas; era uma batalha espiritual. O jejum foca o espírito
+                        e cala a carne.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- ---------- 9.3 MISTÉRIO DAS PORTAS ---------- -->
+        <section id="portas" class="parallax-section depth-section" style="--depth:30">
+            <h3 class="text-4xl text-center high-contrast-text rotate-3d mb-12">
+                Deus Ama as Portas: A Anatomia da Restauração
+            </h3>
+
+            <p class="text-center max-w-3xl mx-auto high-contrast-text mb-20">
+                Ao longo do livro, o autor detalha a reconstrução de cada uma das
+                portas de Jerusalém. As portas na antiguidade eram os locais de
+                julgamento, comércio e defesa. Espiritualmente, a ordem em que
+                Neemias reconstrói as portas (Capítulos 4‑8) revela o processo de
+                restauração na vida de um cristão.
+            </p>
+
+            <!-- ---- Timeline 3‑D (minimal) ---- -->
+            <div class="relative space-y-24">
+                <!-- Linha central -->
+                <div class="absolute inset-y-0 left-1/2 w-2 bg-gradient-to-b
+                            from-yellow-500/20 via-yellow-500/40 to-transparent
+                            -translate-x-1/2"></div>
+
+                <!-- PORTA DAS OVELHAS -->
+                <article class="flex items-center">
+                    <div class="w-1/2 pr-12 text-right">
+                        <div class="card-3d glass p-8 rounded-xl high-contrast-text">
+                            <h4 class="text-2xl font-bold mb-3">
+                                A Porta das Ovelhas <span class="text-sm text-slate-400 uppercase tracking-widest ml-2">Cap. 4</span>
+                            </h4>
+                            <p>
+                                Foi a primeira a ser reconstruída. Por ali passavam os
+                                animais para o sacrifício no Templo. Espiritualmente,
+                                toda restauração começa na Cruz, no Cordeiro de Deus –
+                                a graça está sempre aberta.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="absolute left-1/2 -translate-x-1/2">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br
+                                    from-yellow-500 to-yellow-300 border-2 border-yellow-500
+                                    flex items-center justify-center shadow-lg">
+                            <i data-lucide="heart" class="text-slate-900" size="24"></i>
+                        </div>
+                    </div>
+
+                    <div class="w-1/2"></div>
+                </article>
+
+                <!-- PORTA DO PEIXE -->
+                <article class="flex items-center">
+                    <div class="w-1/2"></div>
+
+                    <div class="absolute left-1/2 -translate-x-1/2">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br
+                                    from-blue-500 to-blue-300 border-2 border-blue-500
+                                    flex items-center justify-center shadow-lg">
+                            <i data-lucide="fish" class="text-slate-900" size="24"></i>
+                        </div>
+                    </div>
+
+                    <div class="w-1/2 pl-12">
+                        <div class="card-3d glass p-8 rounded-xl high-contrast-text">
+                            <h4 class="text-2xl font-bold mb-3">
+                                A Porta do Peixe <span class="text-sm text-slate-400 uppercase tracking-widest ml-2">Cap. 5</span>
+                            </h4>
+                            <p>
+                                Local onde os pescadores traziam seus produtos. Representa
+                                nosso testemunho no mundo – “pescadores de homens”.
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- PORTA VELHA -->
+                <article class="flex items-center">
+                    <div class="w-1/2 pr-12 text-right">
+                        <div class="card-3d glass p-8 rounded-xl high-contrast-text">
+                            <h4 class="text-2xl font-bold mb-3">
+                                A Porta Velha <span class="text-sm text-slate-400 uppercase tracking-widest ml-2">Cap. 6</span>
+                            </h4>
+                            <p>
+                                Representa os fundamentos da Palavra de Deus. Em tempos de
+                                inovações teológicas perigosas, a porta velha nos lembra de
+                                voltar às veredas antigas (Jeremias 6:16).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="absolute left-1/2 -translate-x-1/2">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br
+                                    from-purple-500 to-purple-300 border-2 border-purple-500
+                                    flex items-center justify-center shadow-lg">
+                            <i data-lucide="book" class="text-slate-900" size="24"></i>
+                        </div>
+                    </div>
+
+                    <div class="w-1/2"></div>
+                </article>
+
+                <!-- PORTA DO VALE -->
+                <article class="flex items-center">
+                    <div class="w-1/2"></div>
+
+                    <div class="absolute left-1/2 -translate-x-1/2">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br
+                                    from-green-500 to-green-300 border-2 border-green-500
+                                    flex items-center justify-center shadow-lg">
+                            <i data-lucide="mountain" class="text-slate-900" size="24"></i>
+                        </div>
+                    </div>
+
+                    <div class="w-1/2 pl-12">
+                        <div class="card-3d glass p-8 rounded-xl high-contrast-text">
+                            <h4 class="text-2xl font-bold mb-3">
+                                A Porta do Vale <span class="text-sm text-slate-400 uppercase tracking-widest ml-2">Cap. 7</span>
+                            </h4>
+                            <p>
+                                Os vales falam de provações, humilhação e dependência.
+                                Deus permite que passemos pelo vale para matar o orgulho.
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- PORTA DO MONTURO (Lixo) -->
+                <article class="flex items-center">
+                    <div class="w-1/2 pr-12 text-right">
+                        <div class="card-3d glass p-8 rounded-xl high-contrast-text">
+                            <h4 class="text-2xl font-bold mb-3">
+                                A Porta do Monturo <span class="text-sm text-slate-400 uppercase tracking-widest ml-2">Cap. 8</span>
+                            </h4>
+                            <p>
+                                Também chamada “Porta do Lixo”. É por onde toda a imundície
+                                era levada para fora. Espiritualmente, fala da purificação da
+                                alma – precisamos deitar fora o lixo interior.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="absolute left-1/2 -translate-x-1/2">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br
+                                    from-red-500 to-red-300 border-2 border-red-500
+                                    flex items-center justify-center shadow-lg">
+                            <i data-lucide="trash-2" class="text-slate-900" size="24"></i>
+                        </div>
+                    </div>
+
+                    <div class="w-1/2"></div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ---------- 9.4 LIDANDO COM A OPOSIÇÃO ---------- -->
+        <section id="oposicao" class="parallax-section depth-section" style="--depth:40">
+            <div class="glass p-12 rounded-3xl high-contrast-text">
+                <h3 class="text-4xl text-center mb-8 rotate-3d">
+                    Lidando com as Oposições
+                </h3>
+
+                <p class="mb-6">
+                    O autor enfatiza que <em>toda vez que você decidir levantar‑se para
+                    reconstruir, o inferno também se levantará para impedir</em> (Cap. 3).
+                    Sambalate e Tobias não atacaram Neemias com espadas; usaram a
+                    guerra psicológica: zombarias (“Até uma raposa derruba esse muro”),
+                    boatos e distrações.
+                </p>
+
+                <p class="mb-10">
+                    A resposta de Neemias – “Estou a fazer uma grande obra,
+                    de modo que não poderei descer” – é um princípio eterno de
+                    liderança. Ele não cede à distração nem ao medo.
+                </p>
+
+                <div class="bg-gradient-to-br from-slate-900/80 to-slate-800/80
+                            p-10 rounded-2xl border border-white/5 mt-8">
+                    <h4 class="flex items-center gap-3 font-bold text-yellow-500
+                               text-lg uppercase tracking-widest mb-4">
+                        <i data-lucide="shield" class="text-yellow-500" size="24"></i>
+                        O Zelo e a Alegria
+                    </h4>
+                    <p class="text-slate-300">
+                        A reconstrução física dos muros em 52 dias foi apenas o meio;
+                        o fim era a restauração da comunidade. Quando o povo ouviu
+                        a Palavra, chorou de arrependimento, mas o líder declarou:
+                        <em>“Não vos entristeçais; porque a alegria do Senhor é a vossa força.”</em>
+                        O que parecia perdido torna‑se poderoso testemunho de graça e
+                        fidelidade.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- --------------------------------------------------------------- -->
+    <!-- 10️⃣ RODAPÉ                                                    -->
+    <!-- --------------------------------------------------------------- -->
+    <footer class="bg-slate-950/90 pt-24 pb-12 border-t border-white/5
+                   text-center overflow-hidden">
+        <div class="max-w-3xl mx-auto">
+            <i data-lucide="church" class="text-yellow-600 mx-auto mb-8" size="80"></i>
+
+            <h3 class="font-serif text-5xl mb-8 italic high-contrast-text rotate-3d">
+                Deseja aprofundar a sua vida espiritual?
+            </h3>
+
+            <p class="text-slate-300 mb-12 high-contrast-text">
+                Não lute sozinho em meio às ruínas. Junte‑se a nós para dias
+                de adoração, comunhão e ensino profundo da Palavra de Deus.
+            </p>
+
+            <div class="inline-flex flex-col md:flex-row items-center gap-10
+                        bg-gradient-to-br from-slate-900 to-slate-800
+                        border border-yellow-500/20 p-12 rounded-3xl shadow-2xl">
+                <div class="text-left border-b md:border-b-0 md:border-r
+                            border-white/10 pb-6 md:pb-0 md:pr-8">
+                    <p class="text-xs uppercase tracking-widest text-slate-500
+                              font-bold mb-2">Localização</p>
+                    <p class="font-serif text-3xl text-yellow-500">Ministério Voz da Cura</p>
+                </div>
+
+                <div class="text-left flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br
+                                from-yellow-500/20 to-yellow-500/5
+                                border-2 border-yellow-500/30
+                                flex items-center justify-center">
+                        <i data-lucide="map-pin" class="text-yellow-500" size="24"></i>
+                    </div>
+                    <p class="text-xl font-semibold text-slate-300">
+                        Rua Diogo Brandão, 63<br>Porto, Portugal
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <p class="mt-16 pt-6 border-t border-white/5 opacity-40
+                 text-xs font-black uppercase tracking-widest text-slate-500">
+            © 2026 Comunidade Local | Todos os direitos reservados.
+        </p>
+    </footer>
+
+    <!-- --------------------------------------------------------------- -->
+    <!-- 11️⃣ SCRIPT – Interatividade (ESM‑like, porém sem bundler)       -->
+    <!-- --------------------------------------------------------------- -->
+    <script>
+        // --------------------------------------------------------------- //
+        // 11.1 ÍCONES LUCIDE (acesso via CDN)                           //
+        // --------------------------------------------------------------- //
+        lucide.createIcons();
+
+        // --------------------------------------------------------------- //
+        // 11.2 3‑D – Three.js (cena mínima)                            //
+        // --------------------------------------------------------------- //
+        const ThreeApp = (() => {
+            let scene, camera, renderer, controls, particles = [], animating = true;
+
+            const init = () => {
+                const canvasContainer = document.getElementById('three-canvas');
+
+                // CENA
+                scene = new THREE.Scene();
+
+                // CÂMERA
+                camera = new THREE.PerspectiveCamera(
+                    75,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    2000
+                );
+                camera.position.z = 30;
+
+                // RENDERIZADOR
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                canvasContainer.appendChild(renderer.domElement);
+
+                // CONTROLES (auto‑rotação, sem zoom)
+                controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableZoom = false;
+                controls.enablePan  = false;
+                controls.autoRotate = true;
+                controls.autoRotateSpeed = 0.5;
+
+                // LUZES
+                scene.add(new THREE.AmbientLight(0x444444));
+                const dirLight = new THREE.DirectionalLight(0xd4af37, 0.5);
+                dirLight.position.set(5,5,5);
+                scene.add(dirLight);
+
+                // PARTICULAS – ponto de luz sutil
+                const particlesGeo = new THREE.BufferGeometry();
+                const count = 500;
+                const positions = new Float32Array(count * 3);
+                for (let i = 0; i < count * 3; i++) {
+                    positions[i] = (Math.random() - 0.5) * 100;
+                }
+                particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                const particlesMat = new THREE.PointsMaterial({size:0.12, color:0xd4af37, transparent:true, opacity:0.5});
+                const pts = new THREE.Points(particlesGeo, particlesMat);
+                scene.add(pts);
+
+                // GEOMETRIAS FLUTUANTES (cubo, tetraedro, etc.)
+                const geoms = [
+                    new THREE.TorusGeometry(5,1,16,100),
+                    new THREE.IcosahedronGeometry(3,0),
+                    new THREE.OctahedronGeometry(4,0),
+                    new THREE.TetrahedronGeometry(3,0)
+                ];
+                const mats = [
+                    new THREE.MeshStandardMaterial({color:0xd4af37, wireframe:true}),
+                    new THREE.MeshStandardMaterial({color:0x1e293b, wireframe:true}),
+                    new THREE.MeshStandardMaterial({color:0x475569, wireframe:true}),
+                    new THREE.MeshStandardMaterial({color:0x64748b, wireframe:true})
+                ];
+                for (let i = 0; i < 8; i++) {
+                    const mesh = new THREE.Mesh(
+                        geoms[Math.floor(Math.random()*geoms.length)],
+                        mats[Math.floor(Math.random()*mats.length)]
+                    );
+                    mesh.position.set(
+                        (Math.random()-0.5)*50,
+                        (Math.random()-0.5)*50,
+                        (Math.random()-0.5)*50
+                    );
+                    mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
+                    scene.add(mesh);
+                    particles.push({ mesh, rot:{x:Math.random()*0.02-0.01, y:Math.random()*0.02-0.01, z:Math.random()*0.02-0.01} });
+                }
+
+                // ANIMAÇÃO
+                const animate = () => {
+                    if (!animating) return;
+                    requestAnimationFrame(animate);
+                    particles.forEach(p => {
+                        p.mesh.rotation.x += p.rot.x;
+                        p.mesh.rotation.y += p.rot.y;
+                        p.mesh.rotation.z += p.rot.z;
+                        // pequeno “flutuar” vertical
+                        p.mesh.position.y += Math.sin(Date.now()*0.001 + p.mesh.position.x) * 0.01;
+                    });
+                    controls.update();
+                    renderer.render(scene, camera);
+                };
+                animate();
+
+                // AJUSTE DE TAMANHO
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            };
+
+            const stop = () => { animating = false; };
+            const start = () => { if (!animating) { animating = true; init(); } };
+
+            return { init, stop, start };
+        })();
+
+        // --------------------------------------------------------------- //
+        // 11.3  ATIVAR/DESATIVAR EFEITO 3‑D (botão da barra superior)   //
+        // --------------------------------------------------------------- //
+        const toggle3dBtn = document.getElementById('toggle-3d');
+        toggle3dBtn.addEventListener('click', () => {
+            const enabled = toggle3dBtn.getAttribute('aria-pressed') === 'true';
+            if (enabled) {
+                ThreeApp.stop();
+                toggle3dBtn.setAttribute('aria-pressed','false');
+                toggle3dBtn.innerHTML = '<i data-lucide="square" class="text-yellow-500" size="22"></i>';
+            } else {
+                ThreeApp.init();
+                toggle3dBtn.setAttribute('aria-pressed','true');
+                toggle3dBtn.innerHTML = '<i data-lucide="box" class="text-yellow-500" size="22"></i>';
+            }
+            lucide.createIcons(); // atualizar ícone
+        });
+
+        // Inicializa 3‑D ao carregar a página
+        ThreeApp.init();
+
+        // --------------------------------------------------------------- //
+        // 11.4  MODO “ALTO CONTRASTE” (botão flutuante)                 //
+        // --------------------------------------------------------------- //
+        const accBtn = document.getElementById('accessibility');
+        let isHighContrast = false;
+        accBtn.addEventListener('click', () => {
+            isHighContrast = !isHighContrast;
+            document.documentElement.classList.toggle('high-contrast', isHighContrast);
+            accBtn.setAttribute('aria-pressed', isHighContrast);
+        });
+
+        // --------------------------------------------------------------- //
+        // 11.5  BARRA DE PROGRESSO DE SCROLL                            //
+        // --------------------------------------------------------------- //
+        const progressBar = document.querySelector('.scroll-progress');
+        const updateProgress = () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (scrollTop / docHeight) * 100;
+            progressBar.style.width = `${scrolled}%`;
+        };
+        window.addEventListener('scroll', updateProgress);
+        updateProgress(); // execução inicial
+
+        // --------------------------------------------------------------- //
+        // 11.6  EFEITO PARALLAX (camadas com data-depth)               //
+        // --------------------------------------------------------------- //
+        const parallaxEls = document.querySelectorAll('.parallax-layer');
+        const onParallax = () => {
+            const offset = window.scrollY;
+            parallaxEls.forEach(el => {
+                const depth = parseFloat(el.dataset.depth) || 0;
+                const move = -(offset * depth / 1000);
+                el.style.transform = `translateY(${move}px) translateZ(${depth}px)`;
+            });
+        };
+        window.addEventListener('scroll', onParallax);
+        onParallax(); // execução inicial
+
+        // --------------------------------------------------------------- //
+        // 11.7  CARTÕES 3‑D – pequeno helper para rotacionar           //
+        // --------------------------------------------------------------- //
+        function setCardRotate(card, ry, rx){
+            card.style.setProperty('--rotateY', `${ry}deg`);
+            card.style.setProperty('--rotateX', `${rx}deg`);
+        }
+        function resetCardRotate(card){
+            card.style.setProperty('--rotateY', '0deg');
+            card.style.setProperty('--rotateX', '0deg');
+        }
+
+        // --------------------------------------------------------------- //
+        // 11.8  ATALHO DE TECLADO: ESC para fechar o 3‑D (se aberto)  //
+        // --------------------------------------------------------------- //
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && toggle3dBtn.getAttribute('aria-pressed') === 'true'){
+                toggle3dBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
