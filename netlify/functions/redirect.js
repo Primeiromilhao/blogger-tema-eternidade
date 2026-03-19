@@ -42,7 +42,7 @@ const AFFILIATE_LINKS = {
 };
 
 const STUDY_LINKS = {
-    // Quando o estudo ficar pronto, basta colocar o URL aqui
+    "restaurar_pdf": "https://drive.google.com/file/d/1xqA_jX1mKArbWgSCcxv_H3-KF29ambSC/view?usp=drive_link"
 };
 
 const DEFAULT_DESTINATION = "https://primeiromilhao.github.io/blogger_Estudos/#biblioteca";
