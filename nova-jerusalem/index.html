@@ -490,21 +490,18 @@
 
 </div>
 
-        card.addEventListener('mouseleave', () => { card.style.transform = ''; });
-    });
-
     /* =========================================================
        GEMINI CHATBOT 
        ========================================================= */
     (function() {
         const script = document.createElement('script');
-        script.src = "https://storage.googleapis.com/blogger_estudos_assets/gemini-widget.js";
+        script.src = "../chatbot/gemini-widget.js";
         script.onload = function() {
             initializeGeminiChatbot({
                 containerId: 'gemini-chat',
                 model: 'gemini-1.5-pro',
                 systemPrompt: "Você é o assistente sábio da Escola Bíblica Nova Jerusalém. Ajude os alunos a encontrar os estudos.",
-                jsonConfigUrl: "https://storage.googleapis.com/blogger_estudos_assets/faq_index.json",
+                jsonConfigUrl: "../chatbot/faq_library.json",
                 onMessage: (msg) => {
                     if (typeof gtag === 'function') {
                         gtag('event', 'chatbot_interaction', { 'message': msg });

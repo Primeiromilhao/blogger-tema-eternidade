@@ -764,141 +764,23 @@
 </section>
 
 <!-- Gemini Chatbot Widget -->
-<section id="chat-section" style="padding: 4rem 2rem; display: flex; justify-content: center; background: rgba(5,8,20,0.5); border-top: 1px solid rgba(201,168,76,0.1);">
-    <div id="gemini-chat"></div>
-</section>
-
-<script>
-    // URL template line:
-    // FAQ JSON URL pattern:
-    // https://storage.googleapis.com/<BUCKET_NAME>/faq_<slug>.json
-    window.addEventListener('load', function() {
-        // Assume external chatbot UI library provides initializeGeminiChatbot
-        if (typeof initializeGeminiChatbot === "function") {
-            initializeGeminiChatbot({
-                containerId: "gemini-chat",
-                model: "gemini-1.5-pro",
-                systemPrompt: "Você é um assistente focado em ajudar o leitor a compreender o livro <TITLE>.",
-                jsonConfigUrl: "https://storage.googleapis.com/<BUCKET_NAME>/faq_estudo_espiritos.json",
-                onMessage: function(question) {
-                    if (typeof gtag === 'function') {
-                        gtag('event', 'chatbot_interaction', {
-                            'book': 'estudo_espiritos',
-                            'question': question
-                        });
-                    }
-                }
-            });
-        }
-    });
-</script>
-
-<footer>
-    <p>&copy; 2026 <span>Hub Educacional Bíblico</span> — Todos os direitos reservados.</p>
-    <p style="margin-top:0.5rem;">Baseado em: <span>Os Espíritos Marinhos</span> • Gênesis 6 • Efésios 6</p>
-</footer>
-
-<script>
-    // ── PARTICLE CANVAS ──
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let W, H, particles = [];
-
-    function resize() {
-        W = canvas.width = window.innerWidth;
-        H = canvas.height = window.innerHeight;
-    }
-
-    class Particle {
-        constructor() { this.reset(); }
-        reset() {
-            this.x = Math.random() * W;
-            this.y = Math.random() * H;
-            this.r = Math.random() * 1.2 + 0.2;
-            this.alpha = Math.random() * 0.4 + 0.05;
-            this.vx = (Math.random() - 0.5) * 0.2;
-            this.vy = (Math.random() - 0.5) * 0.2;
-            this.gold = Math.random() > 0.85;
-        }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-            ctx.fillStyle = this.gold
-                ? `rgba(201,168,76,${this.alpha})`
-                : `rgba(100,120,200,${this.alpha * 0.5})`;
-            ctx.fill();
-        }
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
-        }
-    }
-
-    function initParticles() {
-        particles = Array.from({length: 160}, () => new Particle());
-    }
-
-    function loop() {
-        ctx.clearRect(0, 0, W, H);
-
-        // Deep nebula gradient
-        const grad = ctx.createRadialGradient(W/2, H*0.4, 0, W/2, H*0.4, W*0.7);
-        grad.addColorStop(0, 'rgba(30,10,60,0.15)');
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, W, H);
-
-        particles.forEach(p => { p.update(); p.draw(); });
-        requestAnimationFrame(loop);
-    }
-
-    resize();
-    initParticles();
-    loop();
-    window.addEventListener('resize', () => { resize(); initParticles(); });
-
-    // ── REVEAL ON SCROLL ──
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.12 });
-    reveals.forEach(el => observer.observe(el));
-
-    // ── 3D TILT ON CARDS ──
-    document.querySelectorAll('.glass-card').forEach(card => {
-        card.addEventListener('mousemove', e => {
-            const rect = card.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            card.style.transform = `perspective(600px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) translateY(-6px)`;
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = '';
-        });
-    });
-</script>
-<!-- Gemini Chatbot Widget -->
 <div id="gemini-chat"></div>
 <script>
-  if (typeof window.GeminiChatWidget !== "undefined") {
-    window.GeminiChatWidget.init({
-      containerId: "gemini-chat",
-      model: "gemini-1.5-pro",
-      systemPrompt: "You are a helpful assistant specialized in the book: Espíritos Marinhos.",
-      jsonConfigUrl: "https://storage.googleapis.com/<SEU_BUCKET_AQUI>/faq_espiritos-marinhos.json",
-      onMessage: function(userQuery) {
-        if (typeof gtag === "function") {
-          gtag("event", "chatbot_interaction", {
-            "book": "espiritos-marinhos",
-            "question": userQuery
-          });
-        } else {
-          console.warn("GA4 gtag not defined. Event not tracked: chatbot_interaction", userQuery);
+(function() {
+    const script = document.createElement('script');
+    script.src = "../chatbot/gemini-widget.js";
+    script.onload = function() {
+        if (typeof initializeGeminiChatbot === 'function') {
+            initializeGeminiChatbot({
+                containerId: 'gemini-chat',
+                model: 'gemini-1.5-pro',
+                systemPrompt: "Você é o assistente sábio da Escola Bíblica Nova Jerusalém. Ajude os alunos a entender este estudo sobre Espíritos Marinhos.",
+                jsonConfigUrl: "../chatbot/faq_library.json"
+            });
         }
-      }
-    });
-  }
+    };
+    document.head.appendChild(script);
+})();
 </script>
 </body>
 </html>
