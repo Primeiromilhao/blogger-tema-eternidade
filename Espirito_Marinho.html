@@ -28,13 +28,11 @@
 
         h1, h2, h3, h4 { font-family: 'Cinzel', serif; }
 
-        /* ── CANVAS BACKGROUND ── */
-        #bg-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 0;
-            pointer-events: none;
+        /* ── BACKGROUND ── */
+        body {
+            background-color: var(--void);
+            background-image: radial-gradient(circle at 50% 50%, rgba(201, 168, 76, 0.05) 0%, transparent 70%);
+            background-attachment: fixed;
         }
 
         /* ── NAV ── */
@@ -465,7 +463,6 @@
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
 
 <nav>
     <div class="nav-inner">
@@ -763,102 +760,38 @@
     </div>
 </section>
 
-    <div id="gemini-chat"></div>
+  <div id="gemini-chat"></div>
 <footer>
     <p>&copy; 2026 <span>Hub Educacional Bíblico</span> — Todos os direitos reservados.</p>
     <p style="margin-top:0.5rem;">Baseado em: <span>Os Espíritos Marinhos</span> • Gênesis 6 • Efésios 6</p>
 </footer>
 
-<script>
-    // ── PARTICLE CANVAS ──
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let W, H, particles = [];
-
-    function resize() {
-        W = canvas.width = window.innerWidth;
-        H = canvas.height = window.innerHeight;
-    }
-
-    class Particle {
-        constructor() { this.reset(); }
-        reset() {
-            this.x = Math.random() * W;
-            this.y = Math.random() * H;
-            this.r = Math.random() * 1.2 + 0.2;
-            this.alpha = Math.random() * 0.4 + 0.05;
-            this.vx = (Math.random() - 0.5) * 0.2;
-            this.vy = (Math.random() - 0.5) * 0.2;
-            this.gold = Math.random() > 0.85;
+  <script>
+    // Smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const target = document.querySelector(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          history.pushState(null, null, targetId);
         }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-            ctx.fillStyle = this.gold
-                ? `rgba(201,168,76,${this.alpha})`
-                : `rgba(100,120,200,${this.alpha * 0.5})`;
-            ctx.fill();
-        }
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
-        }
-    }
+      });
+    });
 
-    /* =========================================================
-       GEMINI CHATBOT 
-       ========================================================= */
-    (function() {
-        const script = document.createElement('script');
-        script.src = "https://storage.googleapis.com/blogger_estudos_assets/gemini-widget.js";
-        script.onload = function() {
-            initializeGeminiChatbot({
-                containerId: 'gemini-chat',
-                model: 'gemini-1.5-pro',
-                systemPrompt: "Você é o assistente sábio focado no estudo dos espíritos marinhos e libertação.",
-                jsonConfigUrl: "https://storage.googleapis.com/blogger_estudos_assets/faq_marinhos.json",
-                onMessage: (msg) => {
-                    if (typeof gtag === 'function') {
-                        gtag('event', 'chatbot_interaction', { 'message': msg });
-                    }
-                }
-            });
-        };
-        document.head.appendChild(script);
-    })();
-
-    function initParticles() {
-        particles = Array.from({length: 160}, () => new Particle());
-    }
-
-    function loop() {
-        ctx.clearRect(0, 0, W, H);
-
-        // Deep nebula gradient
-        const grad = ctx.createRadialGradient(W/2, H*0.4, 0, W/2, H*0.4, W*0.7);
-        grad.addColorStop(0, 'rgba(30,10,60,0.15)');
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, W, H);
-
-        particles.forEach(p => { p.update(); p.draw(); });
-        requestAnimationFrame(loop);
-    }
-
-    resize();
-    initParticles();
-    loop();
-    window.addEventListener('resize', () => { resize(); initParticles(); });
-
-    // ── REVEAL ON SCROLL ──
-    const reveals = document.querySelectorAll('.reveal');
+    // Intersection Observer for Reveal
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.12 });
-    reveals.forEach(el => observer.observe(el));
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
 
-    // ── 3D TILT ON CARDS ──
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // 3D TILT ON CARDS (Subtle CSS-based feel)
     document.querySelectorAll('.glass-card').forEach(card => {
         card.addEventListener('mousemove', e => {
             const rect = card.getBoundingClientRect();
@@ -870,6 +803,24 @@
             card.style.transform = '';
         });
     });
-</script>
+
+    // Gemini Chatbot Widget
+    (function() {
+      const script = document.createElement('script');
+      script.src = "https://storage.googleapis.com/blogger_estudos_assets/gemini-widget.js";
+      script.async = true;
+      script.onload = function() {
+        if (typeof initializeGeminiChatbot === 'function') {
+          initializeGeminiChatbot({
+            containerId: 'gemini-chat',
+            model: 'gemini-1.5-pro',
+            systemPrompt: "Você é o assistente sábio focado no estudo dos espíritos marinhos e libertação.",
+            jsonConfigUrl: "https://storage.googleapis.com/blogger_estudos_assets/faq_marinhos.json"
+          });
+        }
+      };
+      document.head.appendChild(script);
+    })();
+  </script>
 </body>
 </html>

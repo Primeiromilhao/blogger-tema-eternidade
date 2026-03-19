@@ -37,7 +37,8 @@ const AFFILIATE_LINKS = {
     "deus_terminar": "https://amzn.to/4svuqvJ",
     "homem_fe": "https://amzn.to/41PajFT",
     "novo_nascimento": "https://www.amazon.com.br/Salvacao-um-novo-nascimento-Portuguese/dp/1453808833/",
-    "danca_comigo": "https://www.amazon.com.br/Danca-Comigo-Portuguese-Katy-Cipri/dp/B0FCMMLMQB/"
+    "danca_comigo": "https://www.amazon.com.br/Danca-Comigo-Portuguese-Katy-Cipri/dp/B0FCMMLMQB/",
+    "restaurar": "https://amzn.to/4xqA_jX1mKArbWgSCcxv" 
 };
 
 const STUDY_LINKS = {

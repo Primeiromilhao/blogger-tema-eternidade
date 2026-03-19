@@ -46,7 +46,7 @@
         radial-gradient(ellipse 70% 40% at 80% 40%,rgba(168,216,240,.2)0%,transparent 55%),
         linear-gradient(180deg,#D4EEFF 0%,#E8F7FF 30%,#F0FAFF 60%,#F8FDFF 100%);
     }
-    #river-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.55;}
+
     nav{
       position:sticky;top:0;z-index:100;
       background:rgba(248,253,255,.95);
@@ -97,7 +97,7 @@
     .btn-outline{border:1.5px solid var(--border);color:var(--text-m);background:rgba(255,255,255,.6);}
     .btn-outline:hover{background:var(--river-d);color:#fff;border-color:var(--river-d);}
     .river-divider{position:relative;z-index:1;width:100%;height:100px;overflow:hidden;margin:0;}
-    .river-divider canvas{width:100%;height:100%;display:block;}
+
     .ticker{
       background:linear-gradient(90deg,rgba(91,168,208,.9),rgba(41,108,158,.95),rgba(91,168,208,.9));
       color:#fff;padding:.6rem 0;font-size:.75rem;overflow:hidden;position:relative;z-index:1;width:100%;
@@ -246,7 +246,7 @@
                     <h4 class="book-title-3d">Marine Spirits: Diagnosis and Deliverance</h4>
                     <p class="book-author">Por Henry Otasowere</p>
                     <p class="book-desc-3d">Compreenda a fundo a atuação das entidades espirituais ligadas às águas e à opressão noturna (íncubos e súcubos).</p>
-                    <a href="https://amzn.to/4lv1joR" class="btn btn-gold" style="width:100%;font-size:0.7rem;margin-top:auto;">Ver na Amazon →</a>
+                    <a href="/api/redirect?book=marine_spirits" class="btn btn-gold" style="width:100%;font-size:0.7rem;margin-top:auto;">Ver na Amazon →</a>
                 </div>
             </div>
             <div class="book-3d-card tilt-book">
@@ -256,7 +256,7 @@
                     <h4 class="book-title-3d">Como Destruir o Altar Satânico</h4>
                     <p class="book-author">Por Henry Otasowere</p>
                     <p class="book-desc-3d">A voz do altar é ativada através do sacrifício. Ensina como usar os princípios espirituais para vitória total.</p>
-                    <a href="https://amzn.to/4s8Uj3B" class="btn btn-gold" style="width:100%;font-size:0.7rem;margin-top:auto;">Ver na Amazon →</a>
+                    <a href="/api/redirect?book=altar_satanico" class="btn btn-gold" style="width:100%;font-size:0.7rem;margin-top:auto;">Ver na Amazon →</a>
                 </div>
             </div>
             <div class="book-3d-card tilt-book">
@@ -266,7 +266,7 @@
                     <h4 class="book-title-3d">How To Break Generational Curses</h4>
                     <p class="book-author">Por Henry Otasowere</p>
                     <p class="book-desc-3d">As maldições geracionais são um padrão negativo. Aprenda como quebrá‑las definitivamente da sua família.</p>
-                    <a href="https://www.amazon.com.br/Break-Generational-Curses-Henry-Otasowere/dp/147755677X/" class="btn btn-gold" style="width:100%;font-size:0.7rem;margin-top:auto;">Ver na Amazon →</a>
+                    <a href="/api/redirect?book=generational_curses" class="btn btn-gold" style="width:100%;font-size:0.7rem;margin-top:auto;">Ver na Amazon →</a>
                 </div>
             </div>
         </div>
@@ -286,7 +286,7 @@
                     <h4 class="book-title-3d">A Conta Bancária Espiritual</h4>
                     <p class="book-author">Por Henry Otasowere</p>
                     <p class="book-desc-3d">Como fazer depósitos e levantamentos da sua conta espiritual. Comande ao diabo para liberar o seu dinheiro.</p>
-                    <a href="https://amzn.to/4doDVrb" class="btn btn-gold" style="width:100%;font-size:0.7rem;margin-top:auto;">Ver na Amazon →</a>
+                    <a href="/api/redirect?book=conta_bancaria_espiritual" class="btn btn-gold" style="width:100%;font-size:0.7rem;margin-top:auto;">Ver na Amazon →</a>
                 </div>
             </div>
             <div class="book-3d-card tilt-book">
@@ -296,7 +296,7 @@
                     <h4 class="book-title-3d">The Airdrops Bible</h4>
                     <p class="book-author">Por Henry Otasowere</p>
                     <p class="book-desc-3d">Este guia abrangente fornece uma abordagem passo‑a‑passo para entender os airdrops e lucrar com tokens gratuitos.</p>
-                    <a href="https://amzn.to/4ryHSwS" class="btn btn-gold" style="width:100%;font-size:0.7rem;margin-top:auto;">Ver na Amazon →</a>
+                    <a href="/api/redirect?book=airdrops_bible" class="btn btn-gold" style="width:100%;font-size:0.7rem;margin-top:auto;">Ver na Amazon →</a>
                 </div>
             </div>
             <div class="book-3d-card tilt-book">
@@ -700,60 +700,6 @@ function renderizarEstudos(){
   });
 }
 renderizarEstudos();
-
-/* =========================================================
-   2️⃣  CANVAS – ANIMAÇÃO DE RIOS
-   ========================================================= */
-const cv = document.getElementById('river-canvas');
-const ctx = cv.getContext('2d');
-let W, H;
-function resizeCanvas(){ W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-let t = 0;
-function drawRiver(){
-  ctx.clearRect(0,0,W,H);
-  t += 0.008;
-  const layers = [
-    {y:.6, amp:20, spd:.3, w:250, col:'rgba(140,210,250,0.08)'},
-    {y:.75, amp:15, spd:.4, w:180, col:'rgba(91,168,208,0.06)'},
-    {y:.9, amp:10, spd:.5, w:120, col:'rgba(140,210,250,0.04)'}
-  ];
-  layers.forEach(l=>{
-    const yBase = H*l.y;
-    ctx.beginPath();
-    ctx.moveTo(0,yBase);
-    for(let x=0;x<=W;x+=5){
-      const dy = Math.sin((x/l.w)+t*l.spd)*l.amp;
-      ctx.lineTo(x,yBase+dy);
-    }
-    ctx.lineTo(W,H);
-    ctx.lineTo(0,H);
-    ctx.closePath();
-    ctx.fillStyle = l.col;
-    ctx.fill();
-  });
-  requestAnimationFrame(drawRiver);
-}
-drawRiver();
-
-const dc = document.getElementById('river-divider-canvas');
-const dctx = dc.getContext('2d');
-function resizeDiv(){ dc.width = dc.parentElement.offsetWidth; dc.height = dc.parentElement.offsetHeight; }
-resizeDiv();
-window.addEventListener('resize', resizeDiv);
-function drawDivider(){
-  dctx.clearRect(0,0,dc.width,dc.height);
-  const grad = dctx.createLinearGradient(0,0,0,dc.height);
-  grad.addColorStop(0,'rgba(91,168,208,0)');
-  grad.addColorStop(.5,'rgba(91,168,208,0.3)');
-  grad.addColorStop(1,'rgba(91,168,208,0)');
-  dctx.fillStyle = grad;
-  dctx.fillRect(0,0,dc.width,dc.height);
-  requestAnimationFrame(drawDivider);
-}
-drawDivider();
 
 /* =========================================================
    3️⃣  TICKER
