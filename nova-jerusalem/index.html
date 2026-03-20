@@ -551,9 +551,7 @@
         const script = document.createElement('script');
         script.src = "../chatbot/gemini-widget.js";
         script.onload = function() {
-            initializeGeminiChatbot({
-                containerId: 'gemini-chat',
-                model: 'gemini-1.5-flash',
+                apiKey: 'AIzaSyDXlzlmjEnRmo_-ywN9TlKrawKHnCbuod8',
                 systemPrompt: "Você é o assistente sábio da Escola Bíblica Nova Jerusalém. Ajude os alunos a encontrar os estudos.",
                 jsonConfigUrl: "../chatbot/faq_library.json",
                 booksUrl: "../books.json",

@@ -827,9 +827,7 @@
     script.src = "../chatbot/gemini-widget.js";
     script.onload = function() {
         if (typeof initializeGeminiChatbot === 'function') {
-            initializeGeminiChatbot({
-                containerId: 'gemini-chat',
-                model: 'gemini-1.5-flash',
+                apiKey: 'AIzaSyDXlzlmjEnRmo_-ywN9TlKrawKHnCbuod8',
                 systemPrompt: "Você é o assistente sábio da Escola Bíblica Nova Jerusalém. Ajude os alunos a entender este estudo sobre Espíritos Marinhos.",
                 jsonConfigUrl: "../chatbot/faq_library.json",
                 booksUrl: "../books.json",
