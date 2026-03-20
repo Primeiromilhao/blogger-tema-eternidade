@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Posts — Nova Jerusalém (Interno)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --gold: #C9A84C;
+            --dark: #050A18;
+            --purple: #6D28D9;
+        }
+        body {
+            background: var(--dark);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            margin: 0;
+        }
+        .header p {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .tab.active {
+            background: var(--gold);
+            color: var(--dark);
+            border-color: var(--gold);
+        }
+        .content-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        .caption-area {
+            width: 100%;
+            height: 150px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            resize: none;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        .btn-action {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold);
+            color: var(--dark);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-action:hover { opacity: 0.9; }
+
+        /* ---------- MAPA MENTAL ---------- */
+        .map-preview {
+            width: 100%;
+            aspect-ratio: 1/1; /* Quadrado para Instagram */
+            background: #000;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--purple);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .map-node {
+            position: absolute;
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid white;
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+        .center-node {
+            background: var(--purple);
+            color: white;
+            padding: 20px;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            box-shadow: 0 0 30px var(--purple);
+            font-family: 'Cinzel';
+        }
+        .branch-node {
+            background: var(--dark);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .line {
+            position: absolute;
+            background: rgba(255,255,255,0.2);
+            height: 2px;
+            transform-origin: left center;
+        }
+        .info-msg {
+            font-size: 0.75rem;
+            color: var(--gold);
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <i data-lucide="sparkles" style="color:var(--gold); margin-bottom:10px;"></i>
+            <h1>Gerador de Posts</h1>
+            <p>Conteúdo renovado a cada 4 horas para suas redes.</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('face')">Facebook / WA</div>
+            <div class="tab" onclick="showTab('ig')">Instagram</div>
+        </div>
+
+        <!-- TAB FACEBOOK -->
+        <div id="tab-face" class="tab-content">
+            <div class="content-card">
+                <textarea id="caption-text" class="caption-area" readonly></textarea>
+                <button class="btn-action" onclick="copyCaption()">
+                    <i data-lucide="copy"></i> Copiar Post Completo
+                </button>
+                <div class="info-msg">O link da Amazon e do livro já estão incluídos!</div>
+            </div>
+        </div>
+
+        <!-- TAB INSTAGRAM (MAPA MENTAL) -->
+        <div id="tab-ig" class="tab-content" style="display:none;">
+            <div class="content-card">
+                <div class="map-preview" id="map-container">
+                    <div class="center-node" id="map-center">MISTÉRIOS</div>
+                    <!-- Nodes will be added by JS -->
+                </div>
+                <div class="info-msg" style="margin: 15px 0;">📸 Tire um print desta imagem para o Instagram!</div>
+                <button class="btn-action" style="background:var(--purple); color:white;" onclick="copyCaption()">
+                    <i data-lucide="clipboard-list"></i> Copiar Legenda do IG
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../assets/js/post-generator.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function showTab(type) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            
+            if(type === 'face') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('tab-face').style.display = 'block';
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('tab-ig').style.display = 'block';
+            }
+        }
+
+        function updateGenerator() {
+            const post = window.PostGenerator.getDailyPost();
+            document.getElementById('caption-text').value = post.caption;
+            
+            // Render Mapa Mental
+            const container = document.getElementById('map-container');
+            const center = document.getElementById('map-center');
+            center.innerText = post.mapData.center;
+            
+            // Clean previous branches
+            document.querySelectorAll('.branch-node').forEach(b => b.remove());
+            
+            // Add new branches
+            post.mapData.branches.forEach((b, i) => {
+                const node = document.createElement('div');
+                node.className = 'map-node branch-node';
+                node.innerHTML = `<div>${b.label}</div><div style="font-size:0.6rem; opacity:0.8;">${b.ref}</div>`;
+                
+                // Position logic (circular)
+                const angle = (i * (360 / post.mapData.branches.length)) * (Math.PI / 180);
+                const radius = 150;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+                
+                node.style.left = `calc(50% + ${x}px - 50px)`;
+                node.style.top = `calc(50% + ${y}px - 25px)`;
+                
+                container.appendChild(node);
+            });
+        }
+
+        function copyCaption() {
+            const post = window.PostGenerator.getDailyPost();
+            navigator.clipboard.writeText(post.caption).then(() => {
+                alert('Legenda copiada para o clipboard! 🔥');
+            });
+        }
+
+        // Initialize
+        updateGenerator();
+    </script>
+</body>
+</html>
