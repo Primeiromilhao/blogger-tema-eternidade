@@ -294,7 +294,9 @@
             const prompt = document.getElementById('prompt-input').value.trim();
             if (!prompt) { alert('Por favor, escreva o tema do post!'); return; }
             const apiKey = getApiKey();
-            if (!apiKey) { alert('⚠️ Cole sua API Key do Gemini no campo acima primeiro!'); return; }
+            if (!apiKey) { alert('⚠️ Cole sua OpenRouter API Key no campo acima!'); return; }
+
+            console.log("Iniciando geração para:", prompt, "Plataforma:", currentPlatform);
 
             const btn    = document.getElementById('btn-gen');
             const load   = document.getElementById('loading');
@@ -360,12 +362,12 @@ IMPORTANTE: Retorne APENAS o JSON no formato:
   }
 }`;
 
+            console.log("Enviando requisição para OpenRouter...");
             const res = await fetch(OPENROUTER_URL, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${apiKey}`,
-                    'HTTP-Referer': window.location.href, // Requisito do OpenRouter
                     'X-Title': 'Gerador Social Nova Jerusalém'
                 },
                 body: JSON.stringify({
@@ -376,11 +378,15 @@ IMPORTANTE: Retorne APENAS o JSON no formato:
             });
 
             if (!res.ok) {
-                const err = await res.json();
-                throw new Error(`OpenRouter Error: ${err.error?.message || res.statusText}`);
+                const errText = await res.text();
+                console.error("Erro da API:", errText);
+                let msg = res.statusText;
+                try { const jsonErr = JSON.parse(errText); msg = jsonErr.error?.message || msg; } catch(e){}
+                throw new Error(`OpenRouter Error: ${msg}`);
             }
 
             const json = await res.json();
+            console.log("Resposta recebida com sucesso.");
             const raw  = json.choices?.[0]?.message?.content || '';
             const s = raw.indexOf('{'), e = raw.lastIndexOf('}') + 1;
             if (s < 0) throw new Error('Resposta inválida da IA. Tente novamente.');
