@@ -293,7 +293,8 @@ ${libraryData.map(b => `- ${b.title}: ${b.intro}`).join('\n')}
 4. Nunca invente livros. Cite apenas os da lista.
 5. Se recomendar um livro, escreva [BOOK:${libraryData[0].title}] substituindo pelo nome exato do livro recomendado.`;
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        const model = config.model || 'gemini-1.5-flash';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
         
         try {
             const response = await fetch(url, {
@@ -304,8 +305,16 @@ ${libraryData.map(b => `- ${b.title}: ${b.intro}`).join('\n')}
                 })
             });
             const data = await response.json();
+            console.log("Gemini Response Data:", data);
+            
+            if (data.error) {
+                console.error("Gemini API Error:", data.error);
+                return `Erro na API: ${data.error.message || "Erro desconhecido"}`;
+            }
+
             return data.candidates?.[0]?.content?.parts?.[0]?.text || "Não consegui processar sua dúvida agora. Tente novamente.";
         } catch (e) {
+            console.error("Gemini Fetch Error:", e);
             return "Erro de conexão com a sabedoria IA.";
         }
     };
