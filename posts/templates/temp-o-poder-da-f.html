@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #C9A84C; --dark: #050A18; --purple: #6D28D9; }
+        body { margin: 0; padding: 0; width: 1080px; height: 1080px; background: var(--dark); display: flex; justify-content: center; align-items: center; font-family: 'Inter', sans-serif; position: relative; overflow: hidden; }
+        .map-preview { width: 100%; height: 100%; position: relative; display: flex; justify-content: center; align-items: center; }
+        .map-bg-grid { position: absolute; inset: 0; background-image: radial-gradient(circle at center, var(--purple) 0%, transparent 60%); opacity: 0.2; }
+        .center-node { background: var(--purple); color: white; padding: 40px; border-radius: 50%; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; z-index: 3; box-shadow: 0 0 60px var(--purple); font-family: 'Cinzel', serif; text-align: center; font-size: 2.22rem; border: 4px solid white; line-height: 1.1; }
+        .map-node { position: absolute; padding: 25px 35px; border-radius: 50px; font-size: 1.6rem; font-weight: bold; text-align: center; border: 4px solid var(--gold); background: rgba(10, 16, 40, 0.95); color: white; box-shadow: 0 0 30px rgba(201, 168, 76, 0.3); z-index: 2; display: flex; flex-direction: column; gap: 8px; width: 320px; }
+        .node-title { color: var(--gold); text-transform: uppercase; font-size: 1.1rem; letter-spacing: 1px; }
+        .node-sub { font-size: 1.3rem; line-height: 1.3; }
+        .brand { position: absolute; bottom: 50px; font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.6rem; letter-spacing: 3px; z-index: 4; opacity: 0.8; }
+        .line { position: absolute; background: var(--gold); height: 4px; z-index: 1; transform-origin: 0 50%; opacity: 0.5; box-shadow: 0 0 15px var(--gold); }
+    </style>
+</head>
+<body>
+    <div class="map-preview" id="map-container">
+        <div class="map-bg-grid"></div>
+        <div class="center-node" id="node-center">O Poder da FÃ©</div>
+        <div class="brand">Nova Jerusalém - Biblioteca</div>
+    </div>
+    <script>
+        const branches = [
+            { label: 'A Palavra', ref: 'Hebreus 11:1', angle: 210 },
+            { label: 'Livro Base', ref: 'A GraÃ§a Salvadora', angle: 330 },
+            { label: 'Prática de Hoje', ref: 'Acredite no impossÃ­vel hoje', angle: 90 }
+        ];
+        const container = document.getElementById('map-container');
+        const centerX = 540; const centerY = 540; const radius = 340;
+        branches.forEach(b => {
+            const rad = b.angle * (Math.PI / 180);
+            const x = centerX + Math.cos(rad) * radius;
+            const y = centerY + Math.sin(rad) * radius;
+            const node = document.createElement('div');
+            node.className = 'map-node';
+            node.innerHTML = `<span class="node-title">${b.label}</span><span class="node-sub">${b.ref}</span>`;
+            container.appendChild(node);
+            node.style.left = `${x - (node.offsetWidth || 160)}px`;
+            node.style.top = `${y - 60}px`;
+            const line = document.createElement('div');
+            line.className = 'line';
+            line.style.width = `${radius - 140}px`;
+            line.style.left = `${centerX}px`;
+            line.style.top = `${centerY}px`;
+            line.style.transform = `rotate(${b.angle}deg) translateX(140px)`;
+            container.appendChild(line);
+        });
+    </script>
+</body>
+</html>

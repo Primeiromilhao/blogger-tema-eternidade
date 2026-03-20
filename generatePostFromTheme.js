@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import fetch from 'node-fetch';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
+import { getKJVVerse } from './kjvVerse.js';
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -107,7 +108,7 @@ Seu objetivo é, a partir do tema que o usuário fornecer, gerar:
 
 1. **Resumo conceitual** que conecte o tema ao ensinamento bíblico.  
 2. **Recomendação de um livro** (título, capa, link interno – use a URL relativa ao repositório \`https://primeiromilhao.github.io/blogger_Estudos/{Contexto Original}/index.html\`) que melhor aborda o assunto.  
-3. **Passagem bíblica** que legitime a recomendação (citação completa + referência).  
+3. **Passagem bíblica** que legitime a recomendação (PROPORCIONE UMA REFERÊNCIA VÁLIDA PARA BUSCA NA API, ex: "John 3:16", "Genesis 1:1"). Use nomes de livros em inglês para garantir compatibilidade com a API.
 4. **Exemplo prático** de como aplicar esse princípio no cotidiano (máximo 3 frases).  
 
 **Saída deve ser JSON** no seguinte formato (SEM MARKDOWN, SEM TEXTOS EXTRAS):
@@ -122,15 +123,14 @@ Seu objetivo é, a partir do tema que o usuário fornecer, gerar:
   },
   "biblicalPassage": {
     "reference": "…",
-    "text": "…"
+    "text_fallback": "…"
   },
   "practicalExample": "…"
 }
 
 Importante:
-Use exatamente as informações que aparecem na "knowledge base"; não invente títulos ou passagens que não existam.
-Se houver mais de um livro adequado, escolha o que tem maior comprimento de texto.
-Caso nenhuma passagem bíblica direta corresponda ao tema, indique a passagem que mais se aproxima semanticamente.
+Use exatamente as informações que aparecem na "knowledge base"; não invente títulos que não existam.
+A "reference" deve ser em INGLÊS (ex: "Revelation 1:8") para que possamos buscar o texto exato na King James Version via API.
 Não inclua comentários, explicações adicionais ou markup markdown (\`\`\`json). APENAS O JSON PURO.
 
 Agora, gere a resposta para o seguinte tema: "${topic}".`;
@@ -190,6 +190,14 @@ export async function generatePostFromTheme(userTheme) {
   const { systemMsg, userMsg } = buildGeminiPrompt(userTheme, relevant);
   const answer = await askGemini(systemMsg, userMsg);
   
+  // 5️⃣ Busca o texto REAL na King James Version via API
+  console.log(`Buscando texto oficial KJV para: ${answer.biblicalPassage.reference}...`);
+  const kjv = await getKJVVerse(answer.biblicalPassage.reference);
+  
+  // Injeta o texto real no objeto final
+  answer.biblicalPassage.reference = kjv.reference;
+  answer.biblicalPassage.text = kjv.text;
+
   return answer;
 }
 

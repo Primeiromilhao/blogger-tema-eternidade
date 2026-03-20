@@ -16,6 +16,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 import prettier from 'prettier';
 import slugify from 'slugify';
+import { getVerse } from './bibleVerse.js';
 
 dotenv.config();
 
@@ -62,12 +63,32 @@ function buildSectionsHTML(sections) {
   if (!sections) return '';
   return sections
     .map(sec => {
-      const verseHtml = sec.verse
+      const verseHtml = sec.verse && sec.verse.text
         ? `<blockquote class="verse"><p>${sec.verse.text}</p><footer>— <cite>${sec.verse.ref}</cite></footer></blockquote>`
         : '';
       return `<h2>${sec.heading}</h2>\n<p>${sec.content}</p>\n${verseHtml}`;
     })
     .join('\n');
+}
+
+/**
+ * Verifica e busca o texto oficial de um versículo via API.
+ */
+async function verifyVerses(post, translation = 'almeida') {
+    if (!post.sections) return;
+    for (let sec of post.sections) {
+        if (sec.verse && sec.verse.ref) {
+            try {
+                const official = await getVerse(sec.verse.ref, translation);
+                if (official && official.text) {
+                    sec.verse.text = official.text;
+                    console.log(`[BIBLE-OK] ${sec.verse.ref} verificado.`);
+                }
+            } catch (e) {
+                console.warn(`[BIBLE-WARN] Falha ao verificar ${sec.verse.ref}: ${e.message}`);
+            }
+        }
+    }
 }
 
 function buildPrompt(book) {
@@ -168,7 +189,8 @@ async function renderHTML(post, book, fileName, prevFile, nextFile, themeCss) {
     '{{PREV_URL}}': prevFile ? `./${prevFile}` : '#',
     '{{NEXT_URL}}': nextFile ? `./${nextFile}` : '#',
     '{{LOGO_URL}}': logoUrl,
-    '{{MAP_DATA_JSON}}': JSON.stringify(post.mapData || {}, null, 2)
+    '{{MAP_DATA_JSON}}': JSON.stringify(post.mapData || {}, null, 2),
+    '{{AFFILIATE_LINK}}': book.affiliate_link || 'https://primeiromilhao.github.io/blogger_Estudos/#biblioteca'
   };
 
   let templateHtml = await fs.readFile(TEMPLATE_PATH, 'utf8');
@@ -191,7 +213,23 @@ async function renderHTML(post, book, fileName, prevFile, nextFile, themeCss) {
    ------------------------------------------------- */
 async function main() {
   const library = await fs.readJson(LIBRARY_PATH);
-  const books = library.books;
+  
+  // Load affiliate links
+  let affiliateLinks = [];
+  try {
+    affiliateLinks = await fs.readJson(path.join(__dirname, 'books.json'));
+  } catch (e) {
+    console.warn("⚠️ books.json não encontrado ou inválido.");
+  }
+
+  const books = (library.books || []).map(b => {
+    const linkObj = affiliateLinks.find(al => al.title.toLowerCase().includes(b.title.toLowerCase()));
+    return {
+      ...b,
+      affiliate_link: linkObj ? linkObj.affiliate_link : null
+    };
+  });
+
   const themeCss = await fs.readFile(THEME_CSS_PATH, 'utf8');
 
   const generatedFiles = [];
@@ -204,6 +242,9 @@ async function main() {
     try {
       const prompt = buildPrompt(book);
       const post = await callGemini(prompt);
+      
+      // Integrar a API Bíblia (PT por padrão)
+      await verifyVerses(post, 'almeida');
       
       const html = await renderHTML(post, book, fileName, null, null, themeCss);
       await fs.writeFile(path.join(OUT_DIR, fileName), html, 'utf8');

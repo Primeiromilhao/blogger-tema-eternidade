@@ -174,7 +174,7 @@
             background: radial-gradient(circle at center, #1a0b3d 0%, var(--dark) 100%);
             border-radius: 20px;
             overflow: hidden;
-            border: 1px solid rgba(139,92,246,.5);
+            border: 1px solid rgba(139, 92, 246, 0.5);
             box-shadow: inset 0 0 60px rgba(0,0,0,.7);
         }
         #map-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -184,8 +184,8 @@
         .map-node { position: absolute; transform: translate(-50%,-50%); text-align: center; padding: 8px 12px; border-radius: 10px; font-size: .75rem; font-family: 'Inter', sans-serif; z-index: 10; }
         .map-node.central {
             border: 2px solid var(--accent);
-            background: rgba(139,92,246,.15);
-            box-shadow: 0 0 20px var(--accent), 0 0 40px rgba(139,92,246,.3);
+            background: rgba(139, 92, 246, 0.15);
+            box-shadow: 0 0 20px var(--accent), 0 0 40px rgba(139, 139, 246, 0.3);
             color: var(--neon-purple);
             font-family: 'Cinzel', serif;
             font-weight: 700; font-size: .9rem;
@@ -194,7 +194,7 @@
         }
         .map-node.category {
             border: 2px solid var(--neon-gold);
-            background: rgba(251,191,36,.1);
+            background: rgba(251, 191, 36, 0.1);
             box-shadow: 0 0 14px var(--neon-gold);
             color: var(--neon-gold);
             font-weight: 700;
@@ -232,6 +232,15 @@
                 <span class="key-icon">🤖</span>
                 <select id="model-select" class="model-select" onchange="saveConfig()">
                     <!-- Options populated by JS -->
+                </select>
+            </div>
+
+            <!-- Bible Translation Selector -->
+            <div class="model-row" style="margin-top: 10px;">
+                <span class="key-icon">📖</span>
+                <select id="bible-translation" class="model-select" onchange="saveConfig()">
+                    <option value="almeida">Bíblia em Português (Almeida)</option>
+                    <option value="kjv">King James Version (KJV)</option>
                 </select>
             </div>
 
@@ -347,10 +356,15 @@
             const mod = document.getElementById('model-select').value;
             localStorage.setItem(`key_${currentProvider}`, key);
             localStorage.setItem(`model_${currentProvider}`, mod);
+            localStorage.setItem(`bible_translation`, document.getElementById('bible-translation').value);
         }
 
-        // Auto-save key on change
+        // Auto-save settings
         document.getElementById('api-key-input').addEventListener('input', saveConfig);
+        
+        // Restore bible translation
+        const savedBT = localStorage.getItem('bible_translation');
+        if (savedBT) document.getElementById('bible-translation').value = savedBT;
 
         function log(msg, type = 'log') {
             const con = document.getElementById('debug-console');
@@ -394,18 +408,49 @@
                 let data;
                 const model = document.getElementById('model-select').value;
                 
+                // Load Library data for covers
+                const libRes = await fetch('../data/library.json');
+                const lib = await libRes.json();
+                const library = lib.books || [];
+
                 if (currentProvider === 'google') {
                     data = await callGoogle(prompt, currentPlatform, apiKey, model);
                 } else {
                     data = await callOpenRouter(prompt, currentPlatform, apiKey, model);
                 }
 
+                // Match book cover
+                const book = library.find(b => b.title.toLowerCase().includes(data.bookTitle.toLowerCase())) || {};
+                data.bookCover = book.cover;
+
                 document.getElementById('res-book').textContent     = data.bookTitle    || '—';
+                
+                // Bible Verification
+                const translation = document.getElementById('bible-translation').value;
+                await verifySocialVerses(data, translation);
+
                 document.getElementById('res-caption').textContent  = buildCaption(data);
                 document.getElementById('res-practice').textContent = data.practice     || '—';
+                
+                // Update UI with cover if exists
+                const label = document.getElementById('res-book').parentElement;
+                let coverImg = label.querySelector('.book-cover-preview');
+                if (!coverImg) {
+                    coverImg = document.createElement('img');
+                    coverImg.className = 'book-cover-preview';
+                    coverImg.style = "width: 50px; height: 75px; object-fit: cover; border-radius: 4px; margin-top: 5px; display: block;";
+                    label.appendChild(coverImg);
+                }
+                if (data.bookCover) {
+                    coverImg.src = data.bookCover.startsWith('http') ? data.bookCover : `../data/covers/${data.bookCover}`;
+                    coverImg.style.display = 'block';
+                } else {
+                    coverImg.style.display = 'none';
+                }
+
                 renderMap(data.mapData);
                 dash.classList.add('visible');
-                log("Sucesso! Post gerado.");
+                log("Sucesso! Post gerado e versículos verificados.");
             } catch (e) {
                 log(e.message, 'err');
                 alert('❌ Erro: ' + e.message);
@@ -417,8 +462,36 @@
 
         function buildCaption(data) {
             let text = data.caption || '';
+            
+            // Append verified verses if any
+            if (data.verifiedVerses?.length) {
+                text += '\n\n📖 Versículos Base:\n' + data.verifiedVerses.map(v => `"${v.text}" (${v.reference})`).join('\n');
+            }
+
             if (data.hashtags?.length) text += '\n\n' + data.hashtags.map(t => `#${t.replace(/^#/, '')}`).join(' ');
             return text;
+        }
+
+        async function verifySocialVerses(data, translation) {
+            if (!data.verseReferences || !data.verseReferences.length) return;
+            
+            log(`Verificando ${data.verseReferences.length} versículo(s) na versão ${translation.toUpperCase()}...`);
+            data.verifiedVerses = [];
+
+            for (let ref of data.verseReferences) {
+                try {
+                    const res = await fetch(`https://bible-api.com/${encodeURIComponent(ref)}?translation=${translation}`);
+                    if (res.ok) {
+                        const bibleData = await res.json();
+                        data.verifiedVerses.push({
+                            reference: bibleData.reference,
+                            text: bibleData.text.trim()
+                        });
+                    }
+                } catch (e) {
+                    log(`Erro ao verificar ${ref}: ${e.message}`, 'err');
+                }
+            }
         }
 
          /* ───────────── Google Direct ───────────── */
@@ -480,18 +553,18 @@
 
         function buildPrompt(userPrompt, platform) {
             const platformInstructions = {
-                facebook: 'Tom engajador para Facebook/WhatsApp, emojis e CTA.',
-                instagram: 'Tom inspirador para Instagram, com hashtags.',
+                facebook: 'Estilo VISUAL e DIRETO. Legenda curta com muitos emojis. Foco em uma imagem impactante (descrita no JSON) e versículo bíblico. Pouco texto, muita conexão visual.',
+                instagram: 'Estilo MAPA MENTAL PROFISSIONAL. Conecte: Versículo Bíblico + Prática do dia a dia + Livro como Manual. Design limpo, sem poluição visual.',
                 tiktok: 'Gancho rápido para TikTok, viral, hashtags.'
             };
 
-            return `Você é especialista em redes sociais cristão.
+            return `Você é especialista em redes sociais cristão de elite.
 Plataforma: ${platform.toUpperCase()}
-Instrução de tom: ${platformInstructions[platform] || platformInstructions.facebook}
+Estratégia: ${platformInstructions[platform] || platformInstructions.facebook}
 
 Baseie-se em:
-1. Um LIVRO relacionado ao tema (Henry Otasowere ou clássico cristão)
-2. PASSAGENS BÍBLICAS relevantes (mencione dentro da legenda)
+1. Um LIVRO específico (Henry Otasowere ou clássico cristão)
+2. PASSAGENS BÍBLICAS reais
 3. Um conselho PRÁTICO para o dia a dia
 
 Tema de hoje: ${userPrompt}
@@ -499,17 +572,20 @@ Tema de hoje: ${userPrompt}
 IMPORTANTE: Retorne APENAS o JSON no formato:
 {
   "bookTitle": "...",
-  "caption": "...",
+  "caption": "...", 
   "practice": "...",
   "hashtags": ["tag1","tag2","tag3"],
+  "verseReferences": ["Livro Cap:Ver"],
   "mapData": {
     "center": "TEMA CENTRAL",
     "categories": [
-      { "label": "CATEGORIA 1", "items": ["item1","item2"] },
-      { "label": "CATEGORIA 2", "items": ["item1","item2"] }
+      { "label": "BÍBLIA", "items": ["Referência"] },
+      { "label": "PRÁTICA", "items": ["Ação"] },
+      { "label": "MANUAL", "items": ["Nome do Livro"] }
     ]
   }
-}`;
+}
+No final da legenda (caption), adicione SEMPRE: "Como associado da Amazon, recebo por compras qualificadas."`;
         }
 
         function parseJSON(raw) {
