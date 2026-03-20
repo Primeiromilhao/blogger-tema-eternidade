@@ -3,183 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Posts — Nova Jerusalém (Estilo Neon)</title>
+    <title>Gerador de Posts — Nova Jerusalém</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --bg-page: #050312;
-            --bg-card: #0c0d1b;
-            --bg-card-alt: #0f1024;
             --accent: #8b5cf6;
             --neon-purple: #a78bfa;
             --neon-gold: #fbbf24;
-            --neon-white: #f9f5ff;
-            --text-main: #f9f5ff;
-            --text-muted: #c4b5fd;
-            --border-subtle: rgba(139, 92, 246, 0.4);
-            --radius-lg: 18px;
-            --radius-xl: 22px;
+            --dark: #050312;
+            --card: #0c0d1b;
+            --text: #f9f5ff;
+            --muted: #c4b5fd;
+            --border: rgba(139, 92, 246, 0.4);
         }
-
-        * { box-sizing: border-box; }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            margin: 0; padding: 0;
-            font-family: "Inter", sans-serif;
+            font-family: 'Inter', sans-serif;
             background: radial-gradient(circle at center, #100821 0%, #050312 70%);
-            color: var(--text-main);
+            color: var(--text);
             min-height: 100vh;
-            display: flex; justify-content: center;
+            display: flex;
+            justify-content: center;
         }
+        .page { width: min(1100px, 100%); padding: 20px 16px 60px; }
 
-        .neon-text {
-            color: var(--neon-white);
-            text-shadow: 0 0 5px var(--neon-white), 0 0 10px var(--neon-white), 0 0 20px rgba(255, 255, 255, 0.5);
+        /* --- Header --- */
+        header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+        .brand-mark {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 20%, #fbbf24, transparent 55%),
+                        radial-gradient(circle at 80% 20%, #f97316, transparent 55%),
+                        radial-gradient(circle at 50% 100%, #6366f1, transparent 60%);
+            box-shadow: 0 0 20px var(--accent), 0 0 40px var(--neon-gold);
+            border: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
         }
+        .brand-text h1 { font-family: 'Cinzel', serif; font-size: 1.5rem; letter-spacing: .08em; }
+        .brand-text p { font-size: .8rem; color: var(--muted); margin-top: 2px; }
 
-        .page-shell { width: min(1100px, 100%); padding: 20px 16px 40px; margin: 0 auto; }
-        
-        header { display: flex; align-items: center; gap: 14px; margin-bottom: 25px; }
-        .brand-mark { 
-            width: 42px; height: 42px; border-radius: 999px;
-            background: radial-gradient(circle at 30% 20%, #fbbf24, transparent 55%), radial-gradient(circle at 80% 20%, #f97316, transparent 55%), radial-gradient(circle at 50% 100%, #6366f1, transparent 60%);
-            box-shadow: 0 0 20px var(--accent), 0 0 30px var(--neon-gold);
-            border: 1px solid rgba(248, 250, 252, .25);
-        }
-        .brand-text h1 { font-family: "Cinzel", serif; font-size: 1.5rem; letter-spacing: 0.1em; margin: 0; }
-        .brand-text p { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
-
-        .shell-card {
+        /* --- Shell Card --- */
+        .shell {
             background: rgba(12, 13, 27, 0.85);
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--border-subtle);
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
-            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 22px;
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.15);
             backdrop-filter: blur(10px);
         }
 
-        /* --- UI Controls --- */
-        .controls { margin-bottom: 25px; }
-        .platform-row { display: flex; gap: 8px; margin-bottom: 15px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 999px; }
-        .platform-btn { flex: 1; border: none; background: transparent; color: var(--text-muted); padding: 10px; border-radius: 999px; cursor: pointer; transition: 0.3s; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; }
-        .platform-btn.active { background: var(--accent); color: white; box-shadow: 0 0 15px var(--accent); }
+        /* --- Platform Tabs --- */
+        .platform-row { display: flex; gap: 8px; background: rgba(0,0,0,0.35); padding: 5px; border-radius: 999px; margin-bottom: 18px; }
+        .plat-btn { flex: 1; border: none; background: transparent; color: var(--muted); padding: 10px; border-radius: 999px; cursor: pointer; font-family: inherit; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; transition: .25s; }
+        .plat-btn.active { background: var(--accent); color: #fff; box-shadow: 0 0 18px var(--accent); }
 
-        .input-group { position: relative; }
-        textarea { width: 100%; height: 100px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 14px; color: white; padding: 15px; font-family: inherit; margin-bottom: 15px; outline: none; transition: 0.3s; }
-        textarea:focus { border-color: var(--neon-purple); box-shadow: 0 0 10px rgba(167, 139, 250, 0.3); }
+        /* --- Textarea & Button --- */
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            padding: 14px 16px;
+            height: 100px;
+            resize: none;
+            outline: none;
+            transition: border-color .25s;
+            margin-bottom: 14px;
+        }
+        textarea:focus { border-color: var(--neon-purple); box-shadow: 0 0 12px rgba(167,139,250,.25); }
+        textarea::placeholder { color: rgba(196,181,253,.5); }
 
-        .btn-main { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--accent), #ec4899); border: none; border-radius: 12px; color: white; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; box-shadow: 0 0 15px rgba(236, 72, 153, 0.4); transition: 0.3s; }
-        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 25px rgba(236, 72, 153, 0.6); }
-        .btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent) 0%, #ec4899 100%);
+            border: none; border-radius: 12px;
+            color: #fff; font-family: inherit; font-size: 1rem; font-weight: 800;
+            cursor: pointer; letter-spacing: .05em;
+            box-shadow: 0 0 20px rgba(236,72,153,.4);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: .25s;
+        }
+        .btn-generate:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(236,72,153,.6); }
+        .btn-generate:disabled { opacity: .5; cursor: wait; }
 
-        /* --- Dashboard Layout --- */
-        .dashboard { display: grid; gap: 20px; margin-top: 30px; display: none; }
+        /* --- Loading --- */
+        .loading { display: none; text-align: center; padding: 20px 0; color: var(--neon-purple); font-weight: 600; }
+        .spin { display: inline-block; animation: spin 1.2s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- Dashboard --- */
+        .dashboard { display: none; margin-top: 28px; gap: 20px; }
+        .dashboard.visible { display: grid; }
         @media (min-width: 900px) { .dashboard { grid-template-columns: 1fr 1.2fr; } }
 
-        .panel { background: rgba(15, 16, 36, 0.9); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); padding: 20px; position: relative; }
-        .panel-title { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; font-weight: bold; letter-spacing: 1px; }
+        .panel {
+            background: rgba(15,16,36,.9);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px;
+        }
+        .panel-title { font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 700; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,.07); }
 
-        /* --- Caption & Info --- */
-        .caption-area { background: rgba(5, 3, 18, 0.9); border-radius: 14px; border: 1px dashed var(--neon-purple); padding: 15px; font-size: 0.9rem; line-height: 1.6; min-height: 200px; white-space: pre-wrap; margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
-        .info-card { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 10px; }
-        .info-card i { color: var(--neon-gold); }
-        .label-sm { font-size: 0.75rem; color: var(--text-muted); display: block; }
-        .val-md { font-weight: 600; font-size: 0.9rem; color: var(--neon-white); }
+        .info-card { display: flex; align-items: flex-start; gap: 12px; background: rgba(255,255,255,.03); border-radius: 10px; padding: 12px; margin-bottom: 14px; }
+        .info-card .icon { font-size: 1.3rem; }
+        .info-card .label { font-size: .72rem; color: var(--muted); margin-bottom: 4px; }
+        .info-card .val { font-size: .92rem; font-weight: 600; }
+
+        .caption-box {
+            background: rgba(5,3,18,.9);
+            border: 1px dashed var(--neon-purple);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: .9rem;
+            line-height: 1.65;
+            white-space: pre-wrap;
+            min-height: 160px;
+            margin-bottom: 14px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,.5);
+        }
+
+        .practice-box {
+            background: rgba(139,92,246,.07);
+            border: 1px solid rgba(139,92,246,.5);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: .9rem;
+            line-height: 1.6;
+            color: var(--neon-purple);
+            margin-bottom: 16px;
+        }
+        .practice-box strong { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px; color: var(--muted); }
 
         .actions { display: flex; gap: 10px; }
-        .btn-action { flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; transition: 0.2s; }
-        .btn-action:hover { background: rgba(255,255,255,0.1); border-color: var(--neon-purple); }
+        .btn-action { flex: 1; padding: 11px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: var(--text); border-radius: 8px; cursor: pointer; font-family: inherit; font-size: .85rem; font-weight: 600; transition: .2s; }
+        .btn-action:hover { background: rgba(255,255,255,.12); border-color: var(--neon-purple); }
+        .btn-action.primary { background: var(--accent); border-color: transparent; }
+        .btn-action.primary:hover { background: #7c3aed; }
 
-        /* --- Mind Map Rendering --- */
+        /* --- Mind Map --- */
         #map-container {
             position: relative;
             width: 100%; aspect-ratio: 1/1;
-            background: radial-gradient(circle at center, #1a0b3d 0%, #050312 100%);
+            background: radial-gradient(circle at center, #1a0b3d 0%, var(--dark) 100%);
             border-radius: 20px;
             overflow: hidden;
-            border: 1px solid rgba(139, 92, 246, 0.4);
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+            border: 1px solid rgba(139,92,246,.5);
+            box-shadow: inset 0 0 60px rgba(0,0,0,.7);
         }
-        svg#map-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .branch-line { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 4; filter: drop-shadow(0 0 5px var(--accent)); opacity: 0.6; }
+        #map-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .branch-line { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 6 3; filter: drop-shadow(0 0 4px var(--accent)); opacity: .7; }
+        .branch-line.gold { stroke: var(--neon-gold); filter: drop-shadow(0 0 4px var(--neon-gold)); }
 
-        .map-node {
-            position: absolute;
-            padding: 8px 12px;
-            border-radius: 8px;
-            background: rgba(15, 23, 42, 0.95);
-            color: #fff;
-            font-size: 0.75rem;
-            text-align: center;
-            z-index: 10;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transform: translate(-50%, -50%);
+        .map-node { position: absolute; transform: translate(-50%,-50%); text-align: center; padding: 8px 12px; border-radius: 10px; font-size: .75rem; font-family: 'Inter', sans-serif; z-index: 10; }
+        .map-node.central {
+            border: 2px solid var(--accent);
+            background: rgba(139,92,246,.15);
+            box-shadow: 0 0 20px var(--accent), 0 0 40px rgba(139,92,246,.3);
+            color: var(--neon-purple);
+            font-family: 'Cinzel', serif;
+            font-weight: 700; font-size: .9rem;
+            padding: 16px 20px;
+            border-radius: 14px;
         }
-        .map-node.central { border: 2px solid var(--accent); background: rgba(139, 92, 246, 0.15); box-shadow: 0 0 15px var(--accent); color: var(--neon-purple); font-weight: bold; font-family: 'Cinzel'; padding: 12px 18px; font-size: 0.9rem; width: 150px; }
-        .map-node.category { border: 2px solid var(--neon-gold); background: rgba(251, 191, 36, 0.1); box-shadow: 0 0 10px var(--neon-gold); color: var(--neon-gold); font-weight: bold; }
-        .map-node.item { border: 1px solid rgba(255,255,255,0.3); font-size: 0.65rem; color: var(--text-muted); min-width: 80px; }
-
-        .loading { display: none; text-align: center; margin: 20px 0; color: var(--neon-purple); font-weight: bold; }
-        .spin { animation: rotate 2s linear infinite; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .map-node.category {
+            border: 2px solid var(--neon-gold);
+            background: rgba(251,191,36,.1);
+            box-shadow: 0 0 14px var(--neon-gold);
+            color: var(--neon-gold);
+            font-weight: 700;
+        }
+        .map-node.item { border: 1px solid rgba(255,255,255,.25); background: rgba(15,23,42,.95); color: var(--muted); font-size: .68rem; }
+        .map-hint { font-size: .7rem; color: var(--muted); text-align: center; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <div class="page-shell">
+    <div class="page">
         <header>
             <div class="brand-mark"></div>
             <div class="brand-text">
-                <h1 class="neon-text">Nova Jerusalém</h1>
+                <h1>Nova Jerusalém</h1>
                 <p>Gerador Social IA — Bíblia, Vida e Livros</p>
             </div>
         </header>
 
-        <div class="shell-card">
-            <div class="controls">
-                <div class="platform-row">
-                    <button class="platform-btn active" onclick="setPlatform('facebook')">Facebook / WA</button>
-                    <button class="platform-btn" onclick="setPlatform('instagram')">Instagram</button>
-                    <button class="platform-btn" onclick="setPlatform('tiktok')">TikTok</button>
-                </div>
-                <div class="input-group">
-                    <textarea id="prompt-input" placeholder="Sobre o que você quer falar hoje? (Ex: Como vencer a ansiedade com a fé)"></textarea>
-                    <button id="btn-generate" class="btn-main" onclick="handleGenerate()">
-                        <i data-lucide="zap"></i> GERAR POST COM IA GEMINI
-                    </button>
-                </div>
-                <div id="loading" class="loading">
-                    <i data-lucide="refresh-cw" class="spin" style="margin-bottom: 10px; display: block; width: 30px; height: 30px; margin: 0 auto 10px;"></i>
-                    Mapeando as Escrituras e gerando conteúdo...
-                </div>
+        <div class="shell">
+            <div class="platform-row">
+                <button class="plat-btn active" onclick="setPlatform('facebook', this)">Facebook / WA</button>
+                <button class="plat-btn" onclick="setPlatform('instagram', this)">Instagram</button>
+                <button class="plat-btn" onclick="setPlatform('tiktok', this)">TikTok</button>
+            </div>
+
+            <textarea id="prompt-input" placeholder="Sobre o que quer falar hoje? Ex: Como vencer a ansiedade com a fé..."></textarea>
+
+            <button id="btn-gen" class="btn-generate" onclick="handleGenerate()">
+                ⚡ GERAR POST COM IA GEMINI
+            </button>
+
+            <div id="loading" class="loading">
+                <span class="spin">✦</span> Mapeando as Escrituras e gerando... aguarde!
             </div>
 
             <div id="dashboard" class="dashboard">
-                <!-- Coluna 1: Legenda e Prática -->
+                <!-- Coluna 1: Texto -->
                 <div class="panel">
-                    <div class="panel-title">Post Inspirado</div>
-                    
+                    <div class="panel-title">Post Gerado</div>
+
                     <div class="info-card">
-                        <i data-lucide="book-open"></i>
+                        <span class="icon">📖</span>
                         <div>
-                            <span class="label-sm">Livro / Estudo Base</span>
-                            <span class="val-md" id="res-book"></span>
+                            <div class="label">Livro / Estudo Base</div>
+                            <div class="val" id="res-book">—</div>
                         </div>
                     </div>
 
-                    <div id="res-caption" class="caption-area neon-text"></div>
+                    <div id="res-caption" class="caption-box">—</div>
 
-                    <div class="info-card" style="border: 1px solid var(--accent); background: rgba(139, 92, 246, 0.05);">
-                        <i data-lucide="check-circle" style="color:var(--neon-purple);"></i>
-                        <div>
-                            <span class="label-sm">Prática para o Dia a Dia</span>
-                            <span class="val-md" id="res-practice" style="color: var(--neon-purple);"></span>
-                        </div>
+                    <div class="practice-box">
+                        <strong>✅ Prática para o Dia a Dia</strong>
+                        <span id="res-practice">—</span>
                     </div>
 
                     <div class="actions">
-                        <button class="btn-action" onclick="copyCaption()"><i data-lucide="copy"></i> Copiar Legenda</button>
-                        <button class="btn-action" onclick="shareResult()" style="background:var(--accent);"><i data-lucide="share-2"></i> Compartilhar</button>
+                        <button class="btn-action" onclick="copyCaption()">📋 Copiar</button>
+                        <button class="btn-action primary" onclick="shareResult()">📤 Compartilhar</button>
                     </div>
                 </div>
 
@@ -189,139 +238,188 @@
                     <div id="map-container">
                         <svg id="map-lines"></svg>
                     </div>
-                    <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 10px; text-align: center;">
-                        <i data-lucide="info" style="width: 12px; height: 12px;"></i> Tire um print deste mapa para usar no seu Instagram!
-                    </p>
+                    <p class="map-hint">📸 Tire um print deste mapa para usar no Instagram/TikTok!</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { generateSocialContent } from '../assets/js/social-ai.js';
-        
-        lucide.createIcons();
-        window.currentPlatform = 'facebook';
+    <script>
+        /* ───────────── config ───────────── */
+        const API_KEY = "AIzaSyDouYjeRyr4FA8A1ITwe4pmEqcqeSsr-wE";
+        const API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
-        window.setPlatform = function(p) {
-            window.currentPlatform = p;
-            document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+        let currentPlatform = 'facebook';
+
+        function setPlatform(p, el) {
+            currentPlatform = p;
+            document.querySelectorAll('.plat-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
         }
 
-        window.handleGenerate = async function() {
-            const prompt = document.getElementById('prompt-input').value;
-            if (!prompt) return alert('Por favor, escreva o tema do post!');
+        /* ───────────── generate ───────────── */
+        async function handleGenerate() {
+            const prompt = document.getElementById('prompt-input').value.trim();
+            if (!prompt) { alert('Por favor, escreva o tema do post!'); return; }
 
-            const btn = document.getElementById('btn-generate');
-            const loading = document.getElementById('loading');
-            const dashboard = document.getElementById('dashboard');
+            const btn    = document.getElementById('btn-gen');
+            const load   = document.getElementById('loading');
+            const dash   = document.getElementById('dashboard');
 
             btn.disabled = true;
-            loading.style.display = 'block';
-            dashboard.style.display = 'none';
+            load.style.display = 'block';
+            dash.classList.remove('visible');
 
             try {
-                const data = await generateSocialContent(prompt, window.currentPlatform);
-                
-                // Update Text Content
-                document.getElementById('res-book').innerText = data.bookTitle;
-                document.getElementById('res-caption').innerText = `${data.caption}\n\n${data.hashtags.map(t => `#${t}`).join(' ')}`;
-                document.getElementById('res-practice').innerText = data.practice;
-                
-                // Render Map
-                renderMindMap(data.mapData);
-
-                dashboard.style.display = 'grid';
+                const data = await callGemini(prompt, currentPlatform);
+                document.getElementById('res-book').textContent     = data.bookTitle    || '—';
+                document.getElementById('res-caption').textContent  = buildCaption(data);
+                document.getElementById('res-practice').textContent = data.practice     || '—';
+                renderMap(data.mapData);
+                dash.classList.add('visible');
             } catch (e) {
-                alert('Erro na geração. Verifique sua conexão e chave Gemini.');
                 console.error(e);
+                alert('❌ Erro: ' + e.message);
             } finally {
                 btn.disabled = false;
-                loading.style.display = 'none';
-                lucide.createIcons();
+                load.style.display = 'none';
             }
         }
 
-        function renderMindMap(data) {
+        function buildCaption(data) {
+            let text = data.caption || '';
+            if (data.hashtags?.length) text += '\n\n' + data.hashtags.map(t => `#${t.replace(/^#/, '')}`).join(' ');
+            return text;
+        }
+
+        /* ───────────── Gemini REST ───────────── */
+        async function callGemini(userPrompt, platform) {
+            const platformInstructions = {
+                facebook: 'Tom engajador para Facebook/WhatsApp, emojis e CTA.',
+                instagram: 'Tom inspirador para Instagram, com hashtags.',
+                tiktok: 'Gancho rápido para TikTok, viral, hashtags.'
+            };
+
+            const promptText = `Você é especialista em redes sociais cristão.
+Plataforma: ${platform.toUpperCase()}
+Instrução de tom: ${platformInstructions[platform] || platformInstructions.facebook}
+
+Baseie-se em:
+1. Um LIVRO relacionado ao tema (Henry Otasowere ou clássico cristão)
+2. PASSAGENS BÍBLICAS relevantes (mencione dentro da legenda)
+3. Um conselho PRÁTICO para o dia a dia
+
+Tema: ${userPrompt}
+
+Retorne SOMENTE um JSON (sem markdown, sem explicações):
+{
+  "bookTitle": "...",
+  "caption": "...",
+  "practice": "...",
+  "hashtags": ["tag1","tag2","tag3"],
+  "mapData": {
+    "center": "TEMA CENTRAL",
+    "categories": [
+      { "label": "CATEGORIA 1", "items": ["item","item"] },
+      { "label": "CATEGORIA 2", "items": ["item","item"] }
+    ]
+  }
+}`;
+
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: promptText }] }],
+                    generationConfig: { temperature: 0.85, maxOutputTokens: 1500 }
+                })
+            });
+
+            if (!res.ok) {
+                const err = await res.text();
+                throw new Error(`Gemini ${res.status}: ${err.slice(0, 200)}`);
+            }
+
+            const json = await res.json();
+            const raw  = json.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            const s = raw.indexOf('{'), e = raw.lastIndexOf('}') + 1;
+            if (s < 0) throw new Error('Resposta inválida da IA. Tente novamente.');
+            return JSON.parse(raw.slice(s, e));
+        }
+
+        /* ───────────── Mind Map ───────────── */
+        function renderMap(mapData) {
+            if (!mapData) return;
             const container = document.getElementById('map-container');
             const svg = document.getElementById('map-lines');
-            
-            // Clear previous
+
+            // clear
             container.querySelectorAll('.map-node').forEach(n => n.remove());
             svg.innerHTML = '';
-            
-            const centerX = container.offsetWidth / 2;
-            const centerY = container.offsetHeight / 2;
 
-            // Central Node
-            const centralNode = document.createElement('div');
-            centralNode.className = 'map-node central';
-            centralName: centralNode.innerText = data.center;
-            centralNode.style.left = centerX + 'px';
-            centralNode.style.top = centerY + 'px';
-            container.appendChild(centralNode);
+            const W = container.offsetWidth;
+            const H = container.offsetHeight;
+            const cx = W / 2, cy = H / 2;
 
-            const categories = data.categories || [];
-            categories.forEach((cat, i) => {
-                const angle = (i * (360 / categories.length)) * (Math.PI / 180);
-                const radius = 120;
-                
-                const catX = centerX + Math.cos(angle) * radius;
-                const catY = centerY + Math.sin(angle) * radius;
+            // Central node
+            addNode(container, mapData.center, cx, cy, 'central');
 
-                // Line from center to category
-                addLine(svg, centerX, centerY, catX, catY);
+            const cats = mapData.categories || [];
+            cats.forEach((cat, i) => {
+                const catAngle = (i * (360 / cats.length) - 90) * (Math.PI / 180);
+                const catR = W * 0.27;
+                const catX = cx + Math.cos(catAngle) * catR;
+                const catY = cy + Math.sin(catAngle) * catR;
 
-                // Category Node
-                const catNode = document.createElement('div');
-                catNode.className = 'map-node category';
-                catNode.innerText = cat.label;
-                catNode.style.left = catX + 'px';
-                catNode.style.top = catY + 'px';
-                container.appendChild(catNode);
+                addLine(svg, cx, cy, catX, catY, 'branch-line');
+                addNode(container, cat.label, catX, catY, 'category');
 
-                // Sub-items
                 const items = cat.items || [];
                 items.forEach((item, j) => {
-                    const subAngle = angle + (j - (items.length - 1) / 2) * 0.4;
-                    const subRadius = 190;
-                    
-                    const itemX = centerX + Math.cos(subAngle) * subRadius;
-                    const itemY = centerY + Math.sin(subAngle) * subRadius;
+                    const spread = 0.35;
+                    const subAngle = catAngle + (j - (items.length - 1) / 2) * spread;
+                    const itemR = W * 0.44;
+                    const itemX = cx + Math.cos(subAngle) * itemR;
+                    const itemY = cy + Math.sin(subAngle) * itemR;
 
-                    addLine(svg, catX, catY, itemX, itemY);
-
-                    const itemNode = document.createElement('div');
-                    itemNode.className = 'map-node item';
-                    itemNode.innerText = item;
-                    itemNode.style.left = itemX + 'px';
-                    itemNode.style.top = itemY + 'px';
-                    container.appendChild(itemNode);
+                    addLine(svg, catX, catY, itemX, itemY, 'branch-line gold');
+                    addNode(container, item, itemX, itemY, 'item');
                 });
             });
         }
 
-        function addLine(svg, x1, y1, x2, y2) {
-            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line.setAttribute('x1', x1);
-            line.setAttribute('y1', y1);
-            line.setAttribute('x2', x2);
-            line.setAttribute('y2', y2);
-            line.setAttribute('class', 'branch-line');
-            svg.appendChild(line);
+        function addNode(container, text, x, y, cls) {
+            const n = document.createElement('div');
+            n.className = `map-node ${cls}`;
+            n.textContent = text;
+            n.style.left = x + 'px';
+            n.style.top  = y + 'px';
+            container.appendChild(n);
         }
 
-        window.copyCaption = function() {
-            const text = document.getElementById('res-caption').innerText;
-            navigator.clipboard.writeText(text);
-            alert('Legenda copiada! ✨');
+        function addLine(svg, x1, y1, x2, y2, cls) {
+            const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            l.setAttribute('x1', x1); l.setAttribute('y1', y1);
+            l.setAttribute('x2', x2); l.setAttribute('y2', y2);
+            l.setAttribute('class', cls);
+            svg.appendChild(l);
         }
 
-        window.shareResult = function() {
-            const text = document.getElementById('res-caption').innerText;
+        /* ───────────── copy / share ───────────── */
+        function copyCaption() {
+            const text = document.getElementById('res-caption').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Legenda copiada!');
+            });
+        }
+
+        function shareResult() {
+            const text = document.getElementById('res-caption').textContent;
             if (navigator.share) {
-                navigator.share({ title: 'Post Bíblico IA', text: text });
+                navigator.share({ title: 'Post Bíblico IA', text });
+            } else {
+                copyCaption();
+                alert('Compartilhamento não disponível. Legenda copiada!');
             }
         }
     </script>
