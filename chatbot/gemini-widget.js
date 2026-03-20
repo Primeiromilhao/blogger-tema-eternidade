@@ -300,12 +300,19 @@ ${libraryData.map(b => `- ${b.title}: ${b.intro}`).join('\n')}
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
         
         try {
+            const body = {
+                contents: [{ role: "user", parts: [{ text: userText }] }]
+            };
+            
+            // Add system instruction if supported (v1beta)
+            if (systemPrompt) {
+                body.system_instruction = { parts: [{ text: systemPrompt }] };
+            }
+
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `System: ${systemPrompt}\n\nUser: ${userText}` }] }]
-                })
+                body: JSON.stringify(body)
             });
             const data = await response.json();
             console.log("Gemini Response Data:", data);
@@ -315,7 +322,7 @@ ${libraryData.map(b => `- ${b.title}: ${b.intro}`).join('\n')}
                 return `Erro na API: ${data.error.message || "Erro desconhecido"}`;
             }
 
-            return data.candidates?.[0]?.content?.parts?.[0]?.text || "Não consegui processar sua dúvida agora. Tente novamente.";
+            return data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, não consegui formular uma resposta. Tente reformular sua pergunta.";
         } catch (e) {
             console.error("Gemini Fetch Error:", e);
             return "Erro de conexão com a sabedoria IA.";
