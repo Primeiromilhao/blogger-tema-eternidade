@@ -7,7 +7,8 @@ import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
 const API_KEY = "AIzaSyDouYjeRyr4FA8A1ITwe4pmEqcqeSsr-wE"; // Provided by user
 const genAI = new GoogleGenerativeAI(API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+console.log("Gemini SDK initialized with model: gemini-1.5-flash");
 
 export async function generateSocialContent(prompt, platform) {
     const platformPrompts = {
